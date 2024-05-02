@@ -12,20 +12,92 @@ public class Tabuleiro {
         }
     }
 
-    public void posicionarNavio(int linha, int coluna, int tamanho, char tipo, boolean horizontal) {
-        if (horizontal) {
-            for (int i = 0; i < tamanho; i++) {
-                if (coluna + i < this.tamanho) {
-                    tabuleiro[linha][coluna + i] = tipo;
+    public boolean posicionarNavio(int linha, int coluna, char tipo, int orientacao) {
+        int tamanhoNavio = 0;
+        switch (tipo) {
+            case 'S':
+                tamanhoNavio = 1;
+                break;
+            case 'C':
+                tamanhoNavio = 4;
+                break;
+            case 'D':
+                tamanhoNavio = 2;
+                break;
+            case 'H':
+                tamanhoNavio = 3;
+                break;
+            case 'G':
+                tamanhoNavio = 5;
+                break;
+            default:
+                return false;
+        }
+
+        if (orientacao < 0 || orientacao > 3) {
+            return false;
+        }
+
+        if (orientacao == 0) {
+            if (coluna + tamanhoNavio > tamanho) {
+                return false;
+            }
+            for (int i = 0; i < tamanhoNavio; i++) {
+                if (tabuleiro[linha][coluna + i] != '~') {
+                    return false;
                 }
             }
-        } else {
-            for (int i = 0; i < tamanho; i++) {
-                if (linha + i < this.tamanho) {
-                    tabuleiro[linha + i][coluna] = tipo;
-                }
+            for (int i = 0; i < tamanhoNavio; i++) {
+                // Preenche o tabuleiro com o tipo do navio
+                tabuleiro[linha][coluna + i] = tipo;
             }
         }
+
+        else if (orientacao == 1) {
+             if (linha + tamanhoNavio > tamanho) {
+                return false;
+            }
+            for (int i = 0; i < tamanhoNavio; i++) {
+                if (tabuleiro[linha + i][coluna] != '~') {
+                    return false;
+                }
+            }
+            for (int i = 0; i < tamanhoNavio; i++) {
+                // Preenche o tabuleiro com o tipo do navio
+                tabuleiro[linha + i][coluna] = tipo;
+            }
+        }
+        
+        else if (orientacao == 2) {
+            if (coluna - tamanhoNavio < 0) {
+                return false;
+            }
+            for (int i = 0; i < tamanhoNavio; i++) {
+                if (tabuleiro[linha][coluna - i] != '~') {
+                    return false;
+                }
+            }
+            for (int i = 0; i < tamanhoNavio; i++) {
+                // Preenche o tabuleiro com o tipo do navio
+                tabuleiro[linha][coluna - i] = tipo;
+            }
+        }
+        
+        else if (orientacao == 3) {
+            if (linha - tamanhoNavio < 0) {
+                return false;
+            }
+            for (int i = 0; i < tamanhoNavio; i++) {
+                if (tabuleiro[linha - i][coluna] != '~') {
+                    return false;
+                }
+            }
+            for (int i = 0; i < tamanhoNavio; i++) {
+                // Preenche o tabuleiro com o tipo do navio
+                tabuleiro[linha - i][coluna] = tipo;
+            }
+        }
+        return true;
     }
 
     public boolean atacar(int linha, int coluna) {
