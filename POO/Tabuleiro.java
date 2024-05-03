@@ -13,6 +13,8 @@ public class Tabuleiro {
     }
 
     public boolean posicionarNavio(int linha, int coluna, char tipo, int orientacao) {
+        double radianos,theta = 0;
+        int x1, x2, y1, y2, cos, sin = 0;
         int tamanhoNavio = 0;
         switch (tipo) {
             case 'S':
@@ -34,6 +36,55 @@ public class Tabuleiro {
                 return false;
         }
 
+        if (tipo == 'H') {
+            radianos = Math.toRadians(90); //Transforma graus em radianos
+            theta = radianos*orientacao; //Quantos radianos quer rotacionar
+            cos = (int) Math.cos(theta); //Calcula o cos de theta e passa para int
+            sin = (int) Math.sin(theta); //Calcula o sen de theta e passa para int
+
+            // Nosso "x" representa linha e "y" coluna
+            //                                                    [] -> (x, y)
+            //Valores de translatação do ponto    (x+1, y-1) <- []  [] -> (x+1, y+1)
+            x1 = 1; //(x-x-1)
+            y1 = -1; //(y-y-1)
+            x2 = 1; //(x-x+1)
+            y2 = 1; //(y-y+1)
+
+            //Verica se está ou não na matriz
+            if (((linha+((x1*cos)-(y1*sin))) > tamanho - 1) || ((linha+((x1*cos)-(y1*sin))) < 0)) {
+                return false;
+            }
+            if (((linha+((x2*cos)-(y2*sin))) > tamanho - 1) || ((linha+((x2*cos)-(y2*sin))) < 0)) {
+                return false;
+            }
+            if (((coluna+((x1*sin)+(y1*cos))) > tamanho - 1) || (coluna+((x1*sin)+(y1*cos)) < 0))  {
+                return false;
+            }
+            if (((coluna+((x2*sin)+(y2*cos))) > tamanho - 1) || ((coluna+((x2*sin)+(y2*cos))) < 0)) {
+                return false;
+            } 
+            
+            //Verifica se já existe outro navio no local
+            if ((tabuleiro[linha][coluna]) != '~') {
+                return false;
+            }
+            if ((tabuleiro[linha+((x1*cos)-(y1*sin))][coluna+((x1*sin)+(y1*cos))]) != '~') {
+                return false;
+            }
+            if ((tabuleiro[linha+((x2*cos)-(y2*sin))][coluna+((x2*sin)+(y2*cos))]) != '~') {
+                return false;
+            }
+
+            //Altera matriz do tabuleiro
+            //Aqui fazemos a rotação de fato, pela formula x' = x cos(theta) - y sen(theta) e y' = x sen(theta) + y cos(theta)
+            tabuleiro[linha][coluna] = tipo;
+            tabuleiro[linha+((x1*cos)-(y1*sin))][coluna+((x1*sin)+(y1*cos))] = tipo; 
+            tabuleiro[linha+((x2*cos)-(y2*sin))][coluna+((x2*sin)+(y2*cos))] = tipo;
+
+            return true;
+        }
+     
+        
         if (orientacao < 0 || orientacao > 3) {
             return false;
         }

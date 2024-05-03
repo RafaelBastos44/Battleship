@@ -27,36 +27,38 @@ public class JogoBatalhaNaval {
         }
 
         while (true) {
+            if (ataque == 3){
+                turno = (turno == 1) ? 2 : 1;
+                ataque = 0;
+            }
             System.out.println("Vez do Jogador " + turno);
             for(int i = ataque; i < 3; i++) { // Cada jogador joga 3 vezes
-                System.out.print(i);
                 System.out.print("Ataque " + (i + 1) + " - Digite a linha e a coluna para atacar: ");
                 int linha = scanner.nextInt();
                 int coluna = scanner.nextInt();
 
-                boolean acerto;
                 if (turno == 1) {
-                    acerto = tabuleiroJogador2.atacar(linha, coluna);
+                    tabuleiroJogador2.atacar(linha, coluna);
                     tabuleiroJogador2.exibirTabuleiro();
                 } else {
-                    acerto = tabuleiroJogador1.atacar(linha, coluna);
+                    tabuleiroJogador1.atacar(linha, coluna);
                     tabuleiroJogador1.exibirTabuleiro();
                 }
 
                 gravarEstadoJogo(tabuleiroJogador1, tabuleiroJogador2, turno, i+1);
 
-                if (!acerto && i == 2) { // Se não acertar no último ataque, troca de jogador
+                if (i == 2) { // Se não acertar no último ataque, troca de jogador
                     turno = (turno == 1) ? 2 : 1;
                     break; // Sair do loop de ataque
                 }
             }
+            ataque = 0;
         }
-        // scanner.close(); // Descomente esta linha se não for usar o Scanner em outros lugares após o término do jogo
     }
 
     public static void inicializa(Tabuleiro tabuleiro, Scanner scanner) {
         String x, y, tipo, orientacao;
-        int numCouracado = 0; //1
+        int numCouracado = 1; //1
         int numCruzador = 0; //2
         int numDestroyer = 0; //3
         int numHidroaviao = 1; //5
