@@ -1,0 +1,34 @@
+{
+    "configurations": [
+        {
+            "type": "java",
+            "name": "JogoBatalhaNaval",
+            "request": "launch",
+            "mainClass": "Model.JogoBatalhaNaval",
+            "projectName": "BatalhaNaval"
+        },
+        {
+            "type": "java",
+            "name": "JogoBatalhaNaval",
+            "request": "launch",
+            "mainClass": "BatalhaNaval/Model.JogoBatalhaNaval",
+            "projectName": "BatalhaNaval"
+        },
+        {
+            "type": "java",
+            "name": "JogoBatalhaNaval",
+            "request": "launch",
+            "mainClass": "JogoBatalhaNaval",
+            "projectName": ""
+        },
+        {
+            "name": "Launch Program",
+            "program": "${workspaceFolder}/app.js",
+            "request": "launch",
+            "skipFiles": [
+                "<node_internals>/**"
+            ],
+            "type": "node"
+        }
+    ]
+}
