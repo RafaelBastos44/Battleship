@@ -10,8 +10,8 @@ import java.util.NoSuchElementException;
 public class JogoBatalhaNaval {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
-        Tabuleiro tabuleiroJogador1 = new Tabuleiro(10);
-        Tabuleiro tabuleiroJogador2 = new Tabuleiro(10);
+        Tabuleiro tabuleiroJogador1 = new Tabuleiro(15);
+        Tabuleiro tabuleiroJogador2 = new Tabuleiro(15);
         int turno = 1; // 1 para jogador 1, 2 para jogador 2
         int ataque = 0;
 
@@ -45,10 +45,10 @@ public class JogoBatalhaNaval {
                 int linha = linhaChar - 'A';
 
                 if (turno == 1) {
-                    tabuleiroJogador2.atacar(linha, coluna);
+                    System.out.print(tabuleiroJogador2.atacar(linha, coluna) + "\n");
                     tabuleiroJogador2.exibirTabuleiro();
                 } else {
-                    tabuleiroJogador1.atacar(linha, coluna);
+                    System.out.print(tabuleiroJogador1.atacar(linha, coluna) + "\n");
                     tabuleiroJogador1.exibirTabuleiro();
                 }
 

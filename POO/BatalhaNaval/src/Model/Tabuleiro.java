@@ -155,15 +155,29 @@ public class Tabuleiro {
         return true;
     }
 
-    public boolean atacar(int linha, int coluna) {
+    public String atacar(int linha, int coluna) {
         char cell = tabuleiro[linha][coluna];
         if (cell != '~' && cell != 'X' && cell != 'O') {
-            tabuleiro[linha][coluna] = 'X'; // Acertou um navio
-            return true;
+            // Supõe que letras diferentes são usadas para diferentes tipos de navios
+            tabuleiro[linha][coluna] = 'X'; // Marca que um navio foi atingido
+            // Retorna o tipo do navio com base na letra
+            switch (cell) {
+                case 'G':
+                    return "Couraçado atingido!";
+                case 'S':
+                    return "Submarino atingido!";
+                case 'D':
+                    return "Destroyer atingido!";
+                case 'C':
+                    return "Cruzador atingido!";
+                case 'H':
+                    return "Hidroavião atingido!";
+            }
         } else if (cell == '~') {
             tabuleiro[linha][coluna] = 'O'; // Tiro na água
+            return "Tiro na água.";
         }
-        return false;
+        return "Tiro já realizado nesta posição.";
     }
 
     public void exibirTabuleiro() {
