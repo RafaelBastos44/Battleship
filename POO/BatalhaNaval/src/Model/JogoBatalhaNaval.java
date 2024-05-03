@@ -39,7 +39,7 @@ public class JogoBatalhaNaval {
             }
             System.out.println("Vez do Jogador " + turno);
             for(int i = ataque; i < 3; i++) { // Cada jogador joga 3 vezes
-                System.out.print("Ataque " + (i + 1) + " - Digite a linha e a coluna para atacar (separados por espaço): ");
+                System.out.print("Ataque " + (i + 1) + " - Digite a linha(letra) e a coluna(numero) para atacar (separados por espaço): ");
                 char linhaChar = scanner.next().toUpperCase().charAt(0);
                 int coluna = scanner.nextInt() - 1;
                 int linha = linhaChar - 'A';
@@ -85,7 +85,7 @@ public class JogoBatalhaNaval {
             System.out.println(numSubmarino + " Submarino(s), cada um ocupa 1 quadrado (Tipo: S)");
             System.out.println(numHidroaviao + " Hidroavião(s), cada um ocupa 3 quadrados em formato triangular (Tipo: H)\n");
 
-            do { // printando duas vezes:
+            do {
                 System.out.println("Digite o tipo do navio.");
                 tipo = scanner.next().toUpperCase();
             } while ((!tipo.equals("G") || tipo.equals("G") && numCouracado == 0) &&
@@ -93,20 +93,6 @@ public class JogoBatalhaNaval {
                     (!tipo.equals("S") || tipo.equals("S") && numSubmarino == 0) &&
                     (!tipo.equals("H") || tipo.equals("H") && numHidroaviao == 0) &&
                     (!tipo.equals("C") || tipo.equals("C") && numCruzador == 0));
-
-            //transformar o do while em apenas while:
-            // while (true) {
-            //     System.out.println("Digite o tipo do navio.");
-            //     tipo = scanner.next().toUpperCase();
-            //     if  ((!tipo.equals("G") || tipo.equals("G") && numCouracado == 0) &&
-            //         (!tipo.equals("D") || tipo.equals("D") && numDestroyer == 0) &&
-            //         (!tipo.equals("S") || tipo.equals("S") && numSubmarino == 0) &&
-            //         (!tipo.equals("H") || tipo.equals("H") && numHidroaviao == 0) &&
-            //         (!tipo.equals("C") || tipo.equals("C") && numCruzador == 0));
-            //         break;
-            //     }
-            //}
-
 
             System.out.println("Digite a linha(letra) e a coluna(numero) do navio separados por espaço.");
             linhaChar = scanner.next().toUpperCase().charAt(0);
