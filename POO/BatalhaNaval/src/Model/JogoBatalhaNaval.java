@@ -85,9 +85,9 @@ public class JogoBatalhaNaval {
             System.out.println(numSubmarino + " Submarino(s), cada um ocupa 1 quadrado (Tipo: S)");
             System.out.println(numHidroaviao + " Hidroavião(s), cada um ocupa 3 quadrados em formato triangular (Tipo: H)\n");
 
-            do {
+            do { // printando duas vezes:
                 System.out.println("Digite o tipo do navio.");
-                tipo = scanner.nextLine().toUpperCase();
+                tipo = scanner.next().toUpperCase();
             } while ((!tipo.equals("G") || tipo.equals("G") && numCouracado == 0) &&
                     (!tipo.equals("D") || tipo.equals("D") && numDestroyer == 0) &&
                     (!tipo.equals("S") || tipo.equals("S") && numSubmarino == 0) &&
@@ -108,7 +108,7 @@ public class JogoBatalhaNaval {
             //}
 
 
-            System.out.println("Digite a linha e a coluna do navio.");
+            System.out.println("Digite a linha(letra) e a coluna(numero) do navio separados por espaço.");
             linhaChar = scanner.next().toUpperCase().charAt(0);
             coluna = scanner.nextInt() - 1;
             linha = linhaChar - 'A';
