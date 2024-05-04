@@ -18,22 +18,44 @@ public class JogoBatalhaNaval {
         int ataque = 0;
         int arrayRetorno[] = new int[2];
 
-        try {
-            arrayRetorno = lerEstadoJogo(tabuleiroJogador1, tabuleiroJogador2, tabuleiroOculto1, tabuleiroOculto2);
-            turno = arrayRetorno[0];
-            ataque = arrayRetorno[1];
-        } catch (FileNotFoundException e) {
-            System.out.println("Nenhum jogo salvo encontrado, começando um novo jogo.");
+        System.out.println("BATALHA NAVAL\n");
+        System.out.println("Regras:");
+        System.out.println("1. No começo, cada jogador deve posicionar seus navios no tabuleiro.");
+        System.out.println("2. Cada jogador tem 3 ataques por rodada.");
+        System.out.println("3. O jogo termina quando todos os navios de um jogador forem destruídos.\n");
+
+        System.out.println("Para começar um jogo novo, digite 'n'. Para carregar um jogo salvo, digite 'c'.");
+        char opcao = scanner.next().charAt(0);
+
+        while (opcao != 'n' && opcao != 'c') {
+            System.out.println("Opçao inválida. Digite 'n' para começar um jogo novo ou 'c' para carregar um jogo salvo.");
+            opcao = scanner.next().charAt(0);
+        }
+
+        if (opcao == 'n') {
             System.out.println("Jogador 1, posicione seus navios:");
             inicializa(tabuleiroJogador1, scanner);
             System.out.println("Jogador 2, posicione seus navios:");
             inicializa(tabuleiroJogador2, scanner);
-        } catch (NoSuchElementException | NumberFormatException e) {
-            System.out.println("Arquivo de jogo corrompido, começando um novo jogo.");
-            System.out.println("Jogador 1, posicione seus navios:");
-            inicializa(tabuleiroJogador1, scanner);
-            System.out.println("Jogador 2, posicione seus navios:");
-            inicializa(tabuleiroJogador2, scanner);
+        }
+        else if (opcao == 'c') {
+            try {
+                arrayRetorno = lerEstadoJogo(tabuleiroJogador1, tabuleiroJogador2, tabuleiroOculto1, tabuleiroOculto2);
+                turno = arrayRetorno[0];
+                ataque = arrayRetorno[1];
+            } catch (FileNotFoundException e) {
+                System.out.println("Nenhum jogo salvo encontrado, começando um novo jogo.");
+                System.out.println("Jogador 1, posicione seus navios:");
+                inicializa(tabuleiroJogador1, scanner);
+                System.out.println("Jogador 2, posicione seus navios:");
+                inicializa(tabuleiroJogador2, scanner);
+            } catch (NoSuchElementException | NumberFormatException e) {
+                System.out.println("Arquivo de jogo corrompido, começando um novo jogo.");
+                System.out.println("Jogador 1, posicione seus navios:");
+                inicializa(tabuleiroJogador1, scanner);
+                System.out.println("Jogador 2, posicione seus navios:");
+                inicializa(tabuleiroJogador2, scanner);
+            }
         }
 
         while (true) {
@@ -41,6 +63,7 @@ public class JogoBatalhaNaval {
                 turno = (turno == 1) ? 2 : 1;
                 ataque = 0;
             }
+
             System.out.println("Vez do Jogador " + turno);
             for(int i = ataque; i < 3; i++) { // Cada jogador joga 3 vezes
                 System.out.print("Ataque " + (i + 1) + " - Digite a linha(letra) e a coluna(numero) para atacar (separados por espaço): ");
@@ -50,9 +73,11 @@ public class JogoBatalhaNaval {
 
                 if (turno == 1) {
                     System.out.print(tabuleiroJogador2.atacar(linha, coluna, tabuleiroOculto2) + "\n");
+                    System.out.println("Tabuleiro oculto do Jogador 2:");
                     tabuleiroOculto2.exibirTabuleiro();
                 } else {
                     System.out.print(tabuleiroJogador1.atacar(linha, coluna, tabuleiroOculto1) + "\n");
+                    System.out.println("Tabuleiro oculto do Jogador 1:");
                     tabuleiroOculto1.exibirTabuleiro();
                 }
 
@@ -98,7 +123,7 @@ public class JogoBatalhaNaval {
     public static void inicializa(Tabuleiro tabuleiro, Scanner scanner) {
         String tipo;
 
-        int numCouracado = 0; //1
+        int numCouracado = 1; //1
         int numCruzador = 0; //2
         int numDestroyer = 0; //3
         int numHidroaviao = 0; //5
@@ -149,6 +174,7 @@ public class JogoBatalhaNaval {
             } else {
                 System.out.println("Posição inválida, tente novamente.");
             }
+            System.out.println("\n");
             tabuleiro.exibirTabuleiro();
         }
     }
@@ -174,7 +200,7 @@ public class JogoBatalhaNaval {
 
             return new int[]{turno, numeroDoAtaque}; // Retornando o turno e o número do ataque como um array
         } catch (IOException e) {
-            System.out.println("Exceção ao ler o estado do jogo: " + e.getMessage());
+            System.out.println("Exceçao ao ler o estado do jogo: " + e.getMessage());
             throw e; // Relança a exceção após registrar o erro
         }
     }
