@@ -96,7 +96,7 @@ public class JogoBatalhaNaval {
 
             System.out.println("Digite a linha(letra) e a coluna(numero) do navio separados por espaço.");
             linhaChar = scanner.next().toUpperCase().charAt(0);
-            coluna = scanner.nextInt() - 1;
+            coluna = scanner.nextInt() - 1; // dando erro quando o jogador bota "a c" por exemplo 
             linha = linhaChar - 'A';
             System.out.println("Digite a orientação do navio: (0 para direita, 1 para baixo, 2 para esquerda, 3 para cima)");
             orientacao = scanner.nextInt();
@@ -134,7 +134,7 @@ public class JogoBatalhaNaval {
             int numeroDoAtaque = Integer.parseInt(linhaAtaque.split(": ")[1]);
             return new int[]{turno, numeroDoAtaque}; // Retornando o turno e o número do ataque como um array
         } catch (IOException e) {
-            System.out.println("Erro ao ler o estado do jogo: " + e.getMessage());
+            System.out.println("Exceção ao ler o estado do jogo: " + e.getMessage());
             throw e; // Relança a exceção após registrar o erro
         }
     }
