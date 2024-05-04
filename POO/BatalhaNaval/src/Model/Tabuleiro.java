@@ -207,4 +207,12 @@ public class Tabuleiro {
     public void setCelula(int i, int j, char valor) {
         tabuleiro[i][j] = valor;
     }
+
+    public void reseta() {
+        for (int i = 0; i < tamanho; i++) {
+            for (int j = 0; j < tamanho; j++) {
+                tabuleiro[i][j] = '~';
+            }
+        }
+    }
 }

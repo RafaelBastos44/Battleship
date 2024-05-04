@@ -58,6 +58,19 @@ public class JogoBatalhaNaval {
 
                 gravarEstadoJogo(tabuleiroJogador1, tabuleiroJogador2, tabuleiroOculto1, tabuleiroOculto2, turno, i+1);
 
+                if (turno == 1 && verificaFim(tabuleiroJogador2, tabuleiroOculto2, turno))
+                {
+                    System.out.println("Jogador 1 venceu!");
+                    deletaEstadoJogo();
+                    System.exit(0);
+                }
+                else if (turno == 2 && verificaFim(tabuleiroJogador1, tabuleiroOculto1, turno))
+                {
+                    System.out.println("Jogador 2 venceu!");
+                    deletaEstadoJogo();
+                    System.exit(0);
+                }
+
                 if (i == 2) { // Se não acertar no último ataque, troca de jogador
                     turno = (turno == 1) ? 2 : 1;
                     break; // Sair do loop de ataque
@@ -67,14 +80,29 @@ public class JogoBatalhaNaval {
         }
     }
 
+    private static boolean verificaFim(Tabuleiro tabuleiro, Tabuleiro tabuleiroOculto, int turno)
+    {
+        boolean fim = true;
+        for (int i = 0; i < tabuleiro.getTamanho(); i++) {
+            for (int j = 0; j < tabuleiro.getTamanho(); j++) {
+                if(tabuleiro.getCelula(i, j) != '~' && tabuleiroOculto.getCelula(i, j) != 'X')
+                {
+                    fim = false;
+                }
+            }
+        }
+        
+        return fim;
+    }
+
     public static void inicializa(Tabuleiro tabuleiro, Scanner scanner) {
         String tipo;
 
-        int numCouracado = 1; //1
+        int numCouracado = 0; //1
         int numCruzador = 0; //2
         int numDestroyer = 0; //3
-        int numHidroaviao = 1; //5
-        int numSubmarino = 0; //4
+        int numHidroaviao = 0; //5
+        int numSubmarino = 1; //4
 
         char linhaChar;
         int linha;
@@ -176,6 +204,13 @@ public class JogoBatalhaNaval {
             writer.write("Número do Ataque: " + numeroDoAtaque + "\n");
         } catch (IOException e) {
             System.out.println("Erro ao salvar o estado do jogo: " + e.getMessage());
+        }
+    }
+
+    private static void deletaEstadoJogo() {
+        File file = new File("estado_jogo.txt");
+        if (file.exists()) {
+            file.delete();
         }
     }
     
