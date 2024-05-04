@@ -155,11 +155,15 @@ public class Tabuleiro {
         return true;
     }
 
-    public String atacar(int linha, int coluna) {
-        char cell = tabuleiro[linha][coluna];
+    public String atacar(int linha, int coluna, Tabuleiro tabuleiroOculto) {
+        char cell;
+        if (linha < 0 || linha >= tamanho || coluna < 0 || coluna >= tamanho) {
+            return "Posiçao inválida.";
+        }
+        cell = tabuleiro[linha][coluna];
         if (cell != '~' && cell != 'X' && cell != 'O') {
             // Supõe que letras diferentes são usadas para diferentes tipos de navios
-            tabuleiro[linha][coluna] = 'X'; // Marca que um navio foi atingido
+            tabuleiroOculto.setCelula(linha, coluna, 'X'); // Marca que um navio foi atingido
             // Retorna o tipo do navio com base na letra
             switch (cell) {
                 case 'G':
@@ -171,22 +175,25 @@ public class Tabuleiro {
                 case 'C':
                     return "Cruzador atingido!";
                 case 'H':
-                    return "Hidroavião atingido!";
+                    return "Hidroaviao atingido!";
             }
         } else if (cell == '~') {
-            tabuleiro[linha][coluna] = 'O'; // Tiro na água
+            tabuleiroOculto.setCelula(linha, coluna, 'O');; // Tiro na água
             return "Tiro na água.";
         }
-        return "Tiro já realizado nesta posição.";
+        return "Tiro já realizado nesta posiçao.";
     }
 
     public void exibirTabuleiro() {
+        System.out.println("\n");
         for (int i = 0; i < tamanho; i++) {
+            System.out.print((char) ('A' + i) + " - ");
             for (int j = 0; j < tamanho; j++) {
                 System.out.print(tabuleiro[i][j] + " ");
             }
             System.out.println();
         }
+        System.out.println("\n");
     }
 
     public int getTamanho() {
