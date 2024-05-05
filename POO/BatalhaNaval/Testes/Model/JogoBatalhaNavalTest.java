@@ -16,5 +16,5 @@ public class JogoBatalhaNavalTest {
         // Verifica se todos os navios foram posicionados
         assertEquals(15, tabuleiro.getTamanho());
     }
-
+    // demais metodos sao testados ao jogar o jogo
 }
