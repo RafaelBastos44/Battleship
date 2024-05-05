@@ -162,7 +162,7 @@ public class Tabuleiro {
         }
         cell = tabuleiro[linha][coluna];
         if (cell != '~' && cell != 'X' && cell != 'O') {
-            // Supõe que letras diferentes são usadas para diferentes tipos de navios
+            //Elementos na matriz, diferentes de "~", "X" e "O", representam um navio
             tabuleiroOculto.setCelula(linha, coluna, 'X'); // Marca que um navio foi atingido
             // Retorna o tipo do navio com base na letra
             switch (cell) {
