@@ -124,9 +124,9 @@ public class JogoBatalhaNaval {
         String tipo;
 
         int numCouracado = 1; //1
-        int numCruzador = 0; //2
-        int numDestroyer = 0; //3
-        int numHidroaviao = 0; //5
+        int numCruzador = 1; //2
+        int numDestroyer = 1; //3
+        int numHidroaviao = 1; //5
         int numSubmarino = 1; //4
 
         char linhaChar;
