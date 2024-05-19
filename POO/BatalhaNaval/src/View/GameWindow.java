@@ -58,7 +58,7 @@ public class GameWindow extends JFrame {
         });
 
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(1000, 800); // Adjust size as needed
+        setSize(700, 550); // Adjust size as needed
         setVisible(true);
 
         // Ensure the focus is on the boardPanel initially
