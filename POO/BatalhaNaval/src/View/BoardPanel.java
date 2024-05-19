@@ -11,7 +11,7 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 
 public class BoardPanel extends JPanel {
-    private static final int GRID_SIZE = 10;
+    private static final int GRID_SIZE = 15; // Aumentar o tamanho do tabuleiro para 15x15
     private static final int CELL_SIZE = 30;
     private ShipPanel shipPanel;
     private Ship[][] grid;
@@ -183,6 +183,7 @@ public class BoardPanel extends JPanel {
         Graphics2D g2d = (Graphics2D) g;
         g2d.setColor(Color.BLUE);
 
+        // Desenhar a grade
         for (int row = 0; row < GRID_SIZE; row++) {
             for (int col = 0; col < GRID_SIZE; col++) {
                 int x = col * CELL_SIZE;
@@ -229,3 +230,4 @@ public class BoardPanel extends JPanel {
         return new Dimension(GRID_SIZE * CELL_SIZE, GRID_SIZE * CELL_SIZE);
     }
 }
+
