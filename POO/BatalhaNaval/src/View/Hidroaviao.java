@@ -6,7 +6,7 @@ import java.awt.Graphics2D;
 public class Hidroaviao extends Ship {
 
     public Hidroaviao() {
-        super(3, Color.BLACK); // Definindo o tamanho como 3 e a cor como preto
+        super(3, Color.RED); // Definindo o tamanho como 3 e a cor como preto
     }
 
     @Override

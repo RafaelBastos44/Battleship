@@ -37,28 +37,28 @@ public class Ship {
 // Subclasse Couraçado
 class Couracado extends Ship {
     public Couracado() {
-        super(5, new Color(0, 64, 10)); // Verde escuro
+        super(5, new Color(0, 150, 0)); // Verde
     }
 }
 
 // Subclasse Cruzador
 class Cruzador extends Ship {
     public Cruzador() {
-        super(4, new Color(255, 215, 0)); // Amarelo
+        super(4, new Color(141, 3, 255)); // Roxo
     }
 }
 
 // Subclasse Destroyer
 class Destroyer extends Ship {
     public Destroyer() {
-        super(2, new Color(139, 69, 19)); // Marrom
+        super(2, new Color(0, 100, 255)); // Azul
     }
 }
 
 // Subclasse Submarino
 class Submarino extends Ship {
     public Submarino() {
-        super(1, new Color(255, 165, 0)); // Laranja
+        super(1, new Color(255, 100, 0)); // Laranja
     }
 }
 
