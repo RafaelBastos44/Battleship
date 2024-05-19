@@ -8,18 +8,19 @@ import java.awt.Dimension;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
+import Model.Jogador;
+
 public class ShipPanel extends JPanel {
     private Ship[] ships;
     Ship selectedShip;
 
     public ShipPanel() {
         ships = new Ship[]{
-            new Carrier(),
-            new Battleship(),
-            new Cruiser(),
-            new Submarine(),
+            new Couracado(),
+            new Cruzador(),
+            new Submarino(),
             new Destroyer(),
-            new SpecialShip() // Adicionando o hidroavião
+            new Hidroaviao() // Adicionando o hidroavião
         };
 
         addMouseListener(new MouseAdapter() {
@@ -64,7 +65,7 @@ public class ShipPanel extends JPanel {
             ship.draw(g2d, x, y, cellSize);
             if (ship == selectedShip) {
                 g2d.setColor(Color.RED); // Indica o navio selecionado
-                if (ship instanceof SpecialShip) {
+                if (ship instanceof Hidroaviao) {
                     if (ship.isHorizontal) {
                         g2d.drawRect(x + 30 - cellSize - 2, y - 2, 3 * cellSize + 4, 2 * cellSize + 4);
                     } else {

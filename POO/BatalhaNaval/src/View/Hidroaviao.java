@@ -3,9 +3,9 @@ package View;
 import java.awt.Color;
 import java.awt.Graphics2D;
 
-public class SpecialShip extends Ship {
+public class Hidroaviao extends Ship {
 
-    public SpecialShip() {
+    public Hidroaviao() {
         super(3, Color.BLACK); // Definindo o tamanho como 3 e a cor como preto
     }
 

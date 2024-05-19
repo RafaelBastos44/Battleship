@@ -38,8 +38,8 @@ public class BoardPanel extends JPanel {
                     if (currentShip == null) { // Selecionar navio para posicionar
                         Ship selectedShip = shipPanel.getSelectedShip();
                         if (selectedShip != null) {
-                            if (selectedShip instanceof SpecialShip) {
-                                currentShip = new SpecialShip();
+                            if (selectedShip instanceof Hidroaviao) {
+                                currentShip = new Hidroaviao();
                                 currentShip.isHorizontal = selectedShip.isHorizontal;
                             } else {
                                 currentShip = new Ship(selectedShip.size, selectedShip.color); // Cria uma cópia do navio
@@ -90,7 +90,7 @@ public class BoardPanel extends JPanel {
     }
 
     private boolean canPlaceShip(Ship ship, int row, int col) {
-        if (ship instanceof SpecialShip) {
+        if (ship instanceof Hidroaviao) {
             // Lógica para o hidroavião
             if (ship.isHorizontal) {
                 if (row + 1 >= GRID_SIZE || col - 1 < 0 || col + 1 >= GRID_SIZE) return false;
@@ -128,7 +128,7 @@ public class BoardPanel extends JPanel {
     }
 
     private void placeShip(Ship ship, int row, int col) {
-        if (ship instanceof SpecialShip) {
+        if (ship instanceof Hidroaviao) {
             // Lógica especial para o navio especial
             if (ship.isHorizontal) {
                 grid[row + 1][col - 1] = ship;
@@ -153,7 +153,7 @@ public class BoardPanel extends JPanel {
     }
 
     private void removeShip(Ship ship, int row, int col) {
-        if (ship instanceof SpecialShip) {
+        if (ship instanceof Hidroaviao) {
             // Lógica especial para o navio especial
             if (ship.isHorizontal) {
                 grid[row + 1][col - 1] = null;
@@ -201,7 +201,7 @@ public class BoardPanel extends JPanel {
         // Desenhar o navio temporariamente posicionado
         if (currentShip != null && currentRow != -1 && currentCol != -1) {
             g2d.setColor(currentShip.color);
-            if (currentShip instanceof SpecialShip) {
+            if (currentShip instanceof Hidroaviao) {
                 if (currentShip.isHorizontal) {
                     g2d.fillRect((currentCol - 1) * CELL_SIZE, (currentRow + 1) * CELL_SIZE, CELL_SIZE, CELL_SIZE);
                     g2d.fillRect(currentCol * CELL_SIZE, currentRow * CELL_SIZE, CELL_SIZE, CELL_SIZE);

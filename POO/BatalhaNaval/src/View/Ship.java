@@ -34,24 +34,17 @@ public class Ship {
 }
 
 
-// Subclasse Carrier
-class Carrier extends Ship {
-    public Carrier() {
+// Subclasse Couraçado
+class Couracado extends Ship {
+    public Couracado() {
         super(5, new Color(0, 64, 10)); // Verde escuro
     }
 }
 
-// Subclasse Battleship
-class Battleship extends Ship {
-    public Battleship() {
-        super(4, new Color(0, 128, 0)); // Verde
-    }
-}
-
-// Subclasse Cruiser
-class Cruiser extends Ship {
-    public Cruiser() {
-        super(3, new Color(255, 215, 0)); // Amarelo
+// Subclasse Cruzador
+class Cruzador extends Ship {
+    public Cruzador() {
+        super(4, new Color(255, 215, 0)); // Amarelo
     }
 }
 
@@ -62,9 +55,9 @@ class Destroyer extends Ship {
     }
 }
 
-// Subclasse Submarine
-class Submarine extends Ship {
-    public Submarine() {
+// Subclasse Submarino
+class Submarino extends Ship {
+    public Submarino() {
         super(1, new Color(255, 165, 0)); // Laranja
     }
 }
