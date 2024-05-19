@@ -11,7 +11,7 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 
 public class BoardPanel extends JPanel {
-    private static final int GRID_SIZE = 15; // Aumentar o tamanho do tabuleiro para 15x15
+    private static final int GRID_SIZE = 15;
     private static final int CELL_SIZE = 30;
     private ShipPanel shipPanel;
     private Ship[][] grid;
@@ -91,7 +91,7 @@ public class BoardPanel extends JPanel {
 
     private boolean canPlaceShip(Ship ship, int row, int col) {
         if (ship instanceof SpecialShip) {
-            // Lógica especial para o navio especial
+            // Lógica para o hidroavião
             if (ship.isHorizontal) {
                 if (row + 1 >= GRID_SIZE || col - 1 < 0 || col + 1 >= GRID_SIZE) return false;
                 return grid[row + 1][col - 1] == null &&

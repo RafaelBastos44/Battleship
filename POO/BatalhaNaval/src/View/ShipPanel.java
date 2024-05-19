@@ -19,7 +19,7 @@ public class ShipPanel extends JPanel {
             new Cruiser(),
             new Submarine(),
             new Destroyer(),
-            new SpecialShip() // Adicionando o novo navio especial
+            new SpecialShip() // Adicionando o hidroavião
         };
 
         addMouseListener(new MouseAdapter() {
@@ -66,9 +66,9 @@ public class ShipPanel extends JPanel {
                 g2d.setColor(Color.RED); // Indica o navio selecionado
                 if (ship instanceof SpecialShip) {
                     if (ship.isHorizontal) {
-                        g2d.drawRect(x - cellSize - 2, y - cellSize - 2, 3 * cellSize + 4, 2 * cellSize + 4);
+                        g2d.drawRect(x + 30 - cellSize - 2, y - 2, 3 * cellSize + 4, 2 * cellSize + 4);
                     } else {
-                        g2d.drawRect(x - cellSize - 2, y - cellSize - 2, 2 * cellSize + 4, 3 * cellSize + 4);
+                        g2d.drawRect(x + 30 - cellSize - 2, y - 2, 2 * cellSize + 4, 3 * cellSize + 4);
                     }
                 } else {
                     if (ship.isHorizontal) {

@@ -14,13 +14,13 @@ public class SpecialShip extends Ship {
         g2d.setColor(color);
         // Desenhando a forma especial com base no quadrado do meio como referência
         if (isHorizontal) {
-            g2d.fillRect(x - cellSize, y + cellSize, cellSize, cellSize); // Célula 1 à esquerda
-            g2d.fillRect(x, y, cellSize, cellSize); // Célula 2 central
-            g2d.fillRect(x + cellSize, y + cellSize, cellSize, cellSize); // Célula 3 à direita
+            g2d.fillRect(x - cellSize + 30, y + cellSize, cellSize, cellSize); // Célula 1 à esquerda
+            g2d.fillRect(x + 30, y, cellSize, cellSize); // Célula 2 central
+            g2d.fillRect(x + cellSize + 30, y + cellSize, cellSize, cellSize); // Célula 3 à direita
         } else {
-            g2d.fillRect(x - cellSize, y - cellSize, cellSize, cellSize); // Célula 1 acima
-            g2d.fillRect(x, y, cellSize, cellSize); // Célula 2 central
-            g2d.fillRect(x - cellSize, y + cellSize, cellSize, cellSize); // Célula 3 abaixo
+            g2d.fillRect(x + 30 - cellSize, y - cellSize, cellSize, cellSize); // Célula 1 acima
+            g2d.fillRect(x + 30, y, cellSize, cellSize); // Célula 2 central
+            g2d.fillRect(x + 30 - cellSize, y + cellSize, cellSize, cellSize); // Célula 3 abaixo
         }
     }
 }

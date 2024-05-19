@@ -20,7 +20,8 @@ public class Ship {
             for (int i = 0; i < size; i++) {
                 g2d.fillRect(x + i * cellSize, y, cellSize, cellSize);
             }
-        } else {
+        }
+        else {
             for (int i = 0; i < size; i++) {
                 g2d.fillRect(x, y + i * cellSize, cellSize, cellSize);
             }
@@ -36,7 +37,7 @@ public class Ship {
 // Subclasse Carrier
 class Carrier extends Ship {
     public Carrier() {
-        super(5, new Color(34, 139, 34)); // Verde escuro
+        super(5, new Color(0, 64, 10)); // Verde escuro
     }
 }
 
@@ -54,17 +55,17 @@ class Cruiser extends Ship {
     }
 }
 
-// Subclasse Submarine
-class Submarine extends Ship {
-    public Submarine() {
-        super(3, new Color(255, 165, 0)); // Laranja
-    }
-}
-
 // Subclasse Destroyer
 class Destroyer extends Ship {
     public Destroyer() {
         super(2, new Color(139, 69, 19)); // Marrom
+    }
+}
+
+// Subclasse Submarine
+class Submarine extends Ship {
+    public Submarine() {
+        super(1, new Color(255, 165, 0)); // Laranja
     }
 }
 
