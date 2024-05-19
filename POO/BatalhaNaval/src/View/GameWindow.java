@@ -36,8 +36,8 @@ public class GameWindow extends JFrame {
 
         //make ready button execute printGrid() when clicked
         readyButton.addActionListener(e -> {
-            boardPanel.clearGrid();
             boardPanel.printGrid();
+            boardPanel.clearGrid();
         });
     }
 }
