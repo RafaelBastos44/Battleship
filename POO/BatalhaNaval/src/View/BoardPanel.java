@@ -5,6 +5,7 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.KeyAdapter;
@@ -13,6 +14,7 @@ import java.awt.event.KeyEvent;
 public class BoardPanel extends JPanel {
     private static final int GRID_SIZE = 15;
     private static final int CELL_SIZE = 30;
+    private static final int PADDING = 20; // Padding for row/column labels
     private ShipPanel shipPanel;
     private Ship[][] grid;
     private Ship currentShip;
@@ -31,8 +33,12 @@ public class BoardPanel extends JPanel {
         addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                int col = e.getX() / CELL_SIZE;
-                int row = e.getY() / CELL_SIZE;
+                int col = (e.getX() - PADDING) / CELL_SIZE;
+                int row = (e.getY() - PADDING) / CELL_SIZE;
+
+                if (col < 0 || col >= GRID_SIZE || row < 0 || row >= GRID_SIZE) {
+                    return; // Click was outside of grid area
+                }
 
                 if (e.getButton() == MouseEvent.BUTTON1) { // Clique esquerdo
                     if (currentShip == null) { // Selecionar navio para posicionar
@@ -41,8 +47,20 @@ public class BoardPanel extends JPanel {
                             if (selectedShip instanceof Hidroaviao) {
                                 currentShip = new Hidroaviao();
                                 currentShip.isHorizontal = selectedShip.isHorizontal;
+                            } else if (selectedShip instanceof Couracado) {
+                                currentShip = new Couracado();
+                                currentShip.isHorizontal = selectedShip.isHorizontal;
+                            } else if (selectedShip instanceof Cruzador) {
+                                currentShip = new Cruzador();
+                                currentShip.isHorizontal = selectedShip.isHorizontal;
+                            } else if (selectedShip instanceof Destroyer) {
+                                currentShip = new Destroyer();
+                                currentShip.isHorizontal = selectedShip.isHorizontal;
+                            } else if (selectedShip instanceof Submarino) {
+                                currentShip = new Submarino();
+                                currentShip.isHorizontal = selectedShip.isHorizontal;
                             } else {
-                                currentShip = new Ship(selectedShip.size, selectedShip.color); // Cria uma cópia do navio
+                                currentShip = new Ship(selectedShip.size, selectedShip.color); // Cria uma cópia do navio genérico
                                 currentShip.isHorizontal = selectedShip.isHorizontal;
                             }
                             if (canPlaceShip(currentShip, row, col)) {
@@ -177,18 +195,8 @@ public class BoardPanel extends JPanel {
         }
     }
 
-    public void printGrid() {
-        for (int row = 0; row < GRID_SIZE; row++) {
-            for (int col = 0; col < GRID_SIZE; col++) {
-                if (grid[row][col] != null) {
-                    System.out.print(grid[row][col].getClass().getSimpleName().charAt(0) + " ");
-                } else {
-                    System.out.print("~ ");
-                }
-            }
-            System.out.println();
-        }
-        System.out.println();
+    private String getRowLabel(int index) {
+        return Character.toString((char) ('A' + index));
     }
 
     public void clearGrid() {
@@ -197,7 +205,33 @@ public class BoardPanel extends JPanel {
                 grid[row][col] = null;
             }
         }
+        currentShip = null;
+        currentRow = -1;
+        currentCol = -1;
         repaint();
+    }
+
+    public void printGrid() {
+        // Print column labels
+        System.out.print("  ");
+        for (int col = 1; col <= GRID_SIZE; col++) {
+            System.out.print(col + " ");
+        }
+        System.out.println();
+
+        for (int row = 0; row < GRID_SIZE; row++) {
+            // Print row label
+            System.out.print(getRowLabel(row) + " ");
+            for (int col = 0; col < GRID_SIZE; col++) {
+                if (grid[row][col] != null) {
+                    System.out.print(grid[row][col].getSymbol() + " ");
+                } else {
+                    System.out.print("~ ");
+                }
+            }
+            System.out.println();
+        }
+        System.out.println();
     }
 
     @Override
@@ -209,8 +243,8 @@ public class BoardPanel extends JPanel {
         // Desenhar a grade
         for (int row = 0; row < GRID_SIZE; row++) {
             for (int col = 0; col < GRID_SIZE; col++) {
-                int x = col * CELL_SIZE;
-                int y = row * CELL_SIZE;
+                int x = PADDING + col * CELL_SIZE;
+                int y = PADDING + row * CELL_SIZE;
                 g2d.drawRect(x, y, CELL_SIZE, CELL_SIZE);
 
                 if (grid[row][col] != null) {
@@ -221,27 +255,44 @@ public class BoardPanel extends JPanel {
             }
         }
 
+        // Desenhar as etiquetas de linha
+        g2d.setFont(new Font("Arial", Font.BOLD, 12));
+        for (int row = 0; row < GRID_SIZE; row++) {
+            String label = getRowLabel(row);
+            int labelX = 5;
+            int labelY = PADDING + row * CELL_SIZE + CELL_SIZE / 2 + 5;
+            g2d.drawString(label, labelX, labelY);
+        }
+
+        // Desenhar as etiquetas de coluna
+        for (int col = 0; col < GRID_SIZE; col++) {
+            String label = String.valueOf(col + 1);
+            int labelX = PADDING + col * CELL_SIZE + CELL_SIZE / 2 - 5;
+            int labelY = 15;
+            g2d.drawString(label, labelX, labelY);
+        }
+
         // Desenhar o navio temporariamente posicionado
         if (currentShip != null && currentRow != -1 && currentCol != -1) {
             g2d.setColor(currentShip.color);
             if (currentShip instanceof Hidroaviao) {
                 if (currentShip.isHorizontal) {
-                    g2d.fillRect((currentCol - 1) * CELL_SIZE, (currentRow + 1) * CELL_SIZE, CELL_SIZE, CELL_SIZE);
-                    g2d.fillRect(currentCol * CELL_SIZE, currentRow * CELL_SIZE, CELL_SIZE, CELL_SIZE);
-                    g2d.fillRect((currentCol + 1) * CELL_SIZE, (currentRow + 1) * CELL_SIZE, CELL_SIZE, CELL_SIZE);
+                    g2d.fillRect(PADDING + (currentCol - 1) * CELL_SIZE, PADDING + (currentRow + 1) * CELL_SIZE, CELL_SIZE, CELL_SIZE);
+                    g2d.fillRect(PADDING + currentCol * CELL_SIZE, PADDING + currentRow * CELL_SIZE, CELL_SIZE, CELL_SIZE);
+                    g2d.fillRect(PADDING + (currentCol + 1) * CELL_SIZE, PADDING + (currentRow + 1) * CELL_SIZE, CELL_SIZE, CELL_SIZE);
                 } else {
-                    g2d.fillRect((currentCol - 1) * CELL_SIZE, (currentRow - 1) * CELL_SIZE, CELL_SIZE, CELL_SIZE);
-                    g2d.fillRect(currentCol * CELL_SIZE, currentRow * CELL_SIZE, CELL_SIZE, CELL_SIZE);
-                    g2d.fillRect((currentCol - 1) * CELL_SIZE, (currentRow + 1) * CELL_SIZE, CELL_SIZE, CELL_SIZE);
+                    g2d.fillRect(PADDING + (currentCol - 1) * CELL_SIZE, PADDING + (currentRow - 1) * CELL_SIZE, CELL_SIZE, CELL_SIZE);
+                    g2d.fillRect(PADDING + currentCol * CELL_SIZE, PADDING + currentRow * CELL_SIZE, CELL_SIZE, CELL_SIZE);
+                    g2d.fillRect(PADDING + (currentCol - 1) * CELL_SIZE, PADDING + (currentRow + 1) * CELL_SIZE, CELL_SIZE, CELL_SIZE);
                 }
             } else {
                 if (currentShip.isHorizontal) {
                     for (int i = 0; i < currentShip.size; i++) {
-                        g2d.fillRect(currentCol * CELL_SIZE + i * CELL_SIZE, currentRow * CELL_SIZE, CELL_SIZE, CELL_SIZE);
+                        g2d.fillRect(PADDING + currentCol * CELL_SIZE + i * CELL_SIZE, PADDING + currentRow * CELL_SIZE, CELL_SIZE, CELL_SIZE);
                     }
                 } else {
                     for (int i = 0; i < currentShip.size; i++) {
-                        g2d.fillRect(currentCol * CELL_SIZE, currentRow * CELL_SIZE + i * CELL_SIZE, CELL_SIZE, CELL_SIZE);
+                        g2d.fillRect(PADDING + currentCol * CELL_SIZE, PADDING + currentRow * CELL_SIZE + i * CELL_SIZE, CELL_SIZE, CELL_SIZE);
                     }
                 }
             }
@@ -250,7 +301,6 @@ public class BoardPanel extends JPanel {
 
     @Override
     public Dimension getPreferredSize() {
-        return new Dimension(GRID_SIZE * CELL_SIZE, GRID_SIZE * CELL_SIZE);
+        return new Dimension(PADDING + GRID_SIZE * CELL_SIZE, PADDING + GRID_SIZE * CELL_SIZE);
     }
 }
-

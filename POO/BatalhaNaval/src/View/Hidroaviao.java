@@ -9,6 +9,10 @@ public class Hidroaviao extends Ship {
         super(3, Color.RED); // Definindo o tamanho como 3 e a cor como preto
     }
 
+    public char getSymbol() {
+        return 'H'; // Symbol for Hidroaviao
+    }
+
     @Override
     public void draw(Graphics2D g2d, int x, int y, int cellSize) {
         g2d.setColor(color);

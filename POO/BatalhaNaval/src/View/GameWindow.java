@@ -2,42 +2,70 @@ package View;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 public class GameWindow extends JFrame {
-    private String jogador1;
-    private String jogador2;
+    private BoardPanel boardPanel;
+    private ShipPanel shipPanel;
+    private JButton readyButton;
+    private boolean isPlayerOneTurn;
+    private String playerOneName;
+    private String playerTwoName;
 
-    public GameWindow(String jogador1, String jogador2) {
-        this.jogador1 = jogador1;
-        this.jogador2 = jogador2;
+    public GameWindow(String playerOneName, String playerTwoName) {
+        super("Batalha Naval");
 
-        setTitle("Batalha Naval");
-        setSize(780, 550);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setLocationRelativeTo(null);
+        this.playerOneName = playerOneName;
+        this.playerTwoName = playerTwoName;
+
+        // Initialize components
+        shipPanel = new ShipPanel();
+        boardPanel = new BoardPanel(shipPanel);
+        readyButton = new JButton("Tabuleiro Pronto");
+        isPlayerOneTurn = true; // Player 1 starts first
+
+        // Layout setup
+        setLayout(new BorderLayout());
 
         JPanel mainPanel = new JPanel(new BorderLayout());
-        setContentPane(mainPanel);
-
-        ShipPanel shipPanel = new ShipPanel();
-        BoardPanel boardPanel = new BoardPanel(shipPanel);
-
         mainPanel.add(shipPanel, BorderLayout.WEST);
         mainPanel.add(boardPanel, BorderLayout.CENTER);
 
-        JPanel bottomPanel = new JPanel(new BorderLayout());
-        JLabel instructionLabel = new JLabel(jogador1 + ", selecione uma arma na lista.");
-        JButton readyButton = new JButton("Tabuleiro Pronto!");
+        add(mainPanel, BorderLayout.CENTER);
+        add(readyButton, BorderLayout.SOUTH);
 
-        bottomPanel.add(instructionLabel, BorderLayout.CENTER);
-        bottomPanel.add(readyButton, BorderLayout.SOUTH);
-
-        mainPanel.add(bottomPanel, BorderLayout.SOUTH);
-
-        //make ready button execute printGrid() when clicked
-        readyButton.addActionListener(e -> {
-            boardPanel.printGrid();
-            boardPanel.clearGrid();
+        // Add action listener to the button
+        readyButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                boardPanel.printGrid(); // Print the grid to the terminal
+                if (isPlayerOneTurn) {
+                    // Player 1 has finished positioning ships
+                    isPlayerOneTurn = false;
+                    boardPanel.clearGrid(); // Clear board for player 2
+                    shipPanel.resetSelection(); // Reset ship selection for player 2
+                    readyButton.setText(playerTwoName + ": Tabuleiro Pronto");
+                    JOptionPane.showMessageDialog(GameWindow.this, playerTwoName + ", posicione seus navios.");
+                    boardPanel.requestFocusInWindow(); // Ensure the focus is on the boardPanel
+                } else {
+                    // Player 2 has finished positioning ships
+                    readyButton.setEnabled(false);
+                    // Proceed to the next part of the game (e.g., starting the battle phase)
+                }
+            }
         });
+
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setSize(700, 540); // Adjust size as needed
+        setVisible(true);
+
+        // Ensure the focus is on the boardPanel initially
+        boardPanel.requestFocusInWindow();
+    }
+
+    public static void main(String[] args) {
+        // Example names, replace with actual player names
+        new GameWindow("Jogador 1", "Jogador 2");
     }
 }

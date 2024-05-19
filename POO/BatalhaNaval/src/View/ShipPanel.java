@@ -51,6 +51,10 @@ public class ShipPanel extends JPanel {
         repaint();
     }
 
+    public void resetSelection() {
+        selectedShip = null;
+    }
+
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
