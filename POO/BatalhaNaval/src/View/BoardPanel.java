@@ -16,16 +16,22 @@ public class BoardPanel extends JPanel {
     private static final int CELL_SIZE = 30;
     private static final int PADDING = 20; // Padding for row/column labels
     private ShipPanel shipPanel;
-    private Ship[][] grid;
+    private Ship[][] playerOneGrid;
+    private Ship[][] playerTwoGrid;
+    private Ship[][] currentGrid;
     private Ship currentShip;
     private int currentRow, currentCol;
+    private boolean isPlayerOneTurn;
 
     public BoardPanel(ShipPanel shipPanel) {
         this.shipPanel = shipPanel;
-        this.grid = new Ship[GRID_SIZE][GRID_SIZE];
+        this.playerOneGrid = new Ship[GRID_SIZE][GRID_SIZE];
+        this.playerTwoGrid = new Ship[GRID_SIZE][GRID_SIZE];
+        this.currentGrid = playerOneGrid;
         this.currentShip = null;
         this.currentRow = -1;
         this.currentCol = -1;
+        this.isPlayerOneTurn = true;
 
         setFocusable(true);
         requestFocusInWindow();
@@ -112,14 +118,14 @@ public class BoardPanel extends JPanel {
             // Lógica para o hidroavião
             if (ship.isHorizontal) {
                 if (row + 1 >= GRID_SIZE || col - 1 < 0 || col + 1 >= GRID_SIZE) return false;
-                return grid[row + 1][col - 1] == null &&
-                       grid[row][col] == null &&
-                       grid[row + 1][col + 1] == null;
+                return currentGrid[row + 1][col - 1] == null &&
+                       currentGrid[row][col] == null &&
+                       currentGrid[row + 1][col + 1] == null;
             } else {
                 if (row - 1 < 0 || row + 1 >= GRID_SIZE || col - 1 < 0) return false;
-                return grid[row - 1][col - 1] == null &&
-                       grid[row][col] == null &&
-                       grid[row + 1][col - 1] == null;
+                return currentGrid[row - 1][col - 1] == null &&
+                       currentGrid[row][col] == null &&
+                       currentGrid[row + 1][col - 1] == null;
             }
         } else {
             if (ship.isHorizontal) {
@@ -127,7 +133,7 @@ public class BoardPanel extends JPanel {
                     return false; // Verifica se o navio cabe na grade horizontalmente
                 }
                 for (int i = 0; i < ship.size; i++) {
-                    if (grid[row][col + i] != null) {
+                    if (currentGrid[row][col + i] != null) {
                         return false; // Verifica se há outro navio no caminho
                     }
                 }
@@ -136,7 +142,7 @@ public class BoardPanel extends JPanel {
                     return false; // Verifica se o navio cabe na grade verticalmente
                 }
                 for (int i = 0; i < ship.size; i++) {
-                    if (grid[row + i][col] != null) {
+                    if (currentGrid[row + i][col] != null) {
                         return false; // Verifica se há outro navio no caminho
                     }
                 }
@@ -149,22 +155,22 @@ public class BoardPanel extends JPanel {
         if (ship instanceof Hidroaviao) {
             // Lógica especial para o navio especial
             if (ship.isHorizontal) {
-                grid[row + 1][col - 1] = ship;
-                grid[row][col] = ship;
-                grid[row + 1][col + 1] = ship;
+                currentGrid[row + 1][col - 1] = ship;
+                currentGrid[row][col] = ship;
+                currentGrid[row + 1][col + 1] = ship;
             } else {
-                grid[row - 1][col - 1] = ship;
-                grid[row][col] = ship;
-                grid[row + 1][col - 1] = ship;
+                currentGrid[row - 1][col - 1] = ship;
+                currentGrid[row][col] = ship;
+                currentGrid[row + 1][col - 1] = ship;
             }
         } else {
             if (ship.isHorizontal) {
                 for (int i = 0; i < ship.size; i++) {
-                    grid[row][col + i] = ship;
+                    currentGrid[row][col + i] = ship;
                 }
             } else {
                 for (int i = 0; i < ship.size; i++) {
-                    grid[row + i][col] = ship;
+                    currentGrid[row + i][col] = ship;
                 }
             }
         }
@@ -174,22 +180,22 @@ public class BoardPanel extends JPanel {
         if (ship instanceof Hidroaviao) {
             // Lógica especial para o navio especial
             if (ship.isHorizontal) {
-                grid[row + 1][col - 1] = null;
-                grid[row][col] = null;
-                grid[row + 1][col + 1] = null;
+                currentGrid[row + 1][col - 1] = null;
+                currentGrid[row][col] = null;
+                currentGrid[row + 1][col + 1] = null;
             } else {
-                grid[row - 1][col - 1] = null;
-                grid[row][col] = null;
-                grid[row + 1][col - 1] = null;
+                currentGrid[row - 1][col - 1] = null;
+                currentGrid[row][col] = null;
+                currentGrid[row + 1][col - 1] = null;
             }
         } else {
             if (ship.isHorizontal) {
                 for (int i = 0; i < ship.size; i++) {
-                    grid[row][col + i] = null;
+                    currentGrid[row][col + i] = null;
                 }
             } else {
                 for (int i = 0; i < ship.size; i++) {
-                    grid[row + i][col] = null;
+                    currentGrid[row + i][col] = null;
                 }
             }
         }
@@ -199,10 +205,20 @@ public class BoardPanel extends JPanel {
         return Character.toString((char) ('A' + index));
     }
 
+    public void switchPlayer() {
+        if (isPlayerOneTurn) {
+            currentGrid = playerTwoGrid;
+        } else {
+            currentGrid = playerOneGrid;
+        }
+        isPlayerOneTurn = !isPlayerOneTurn;
+        repaint();
+    }
+
     public void clearGrid() {
         for (int row = 0; row < GRID_SIZE; row++) {
             for (int col = 0; col < GRID_SIZE; col++) {
-                grid[row][col] = null;
+                currentGrid[row][col] = null;
             }
         }
         currentShip = null;
@@ -223,8 +239,8 @@ public class BoardPanel extends JPanel {
             // Print row label
             System.out.print(getRowLabel(row) + " ");
             for (int col = 0; col < GRID_SIZE; col++) {
-                if (grid[row][col] != null) {
-                    System.out.print(grid[row][col].getSymbol() + " ");
+                if (currentGrid[row][col] != null) {
+                    System.out.print(currentGrid[row][col].getSymbol() + " ");
                 } else {
                     System.out.print("~ ");
                 }
@@ -247,8 +263,8 @@ public class BoardPanel extends JPanel {
                 int y = PADDING + row * CELL_SIZE;
                 g2d.drawRect(x, y, CELL_SIZE, CELL_SIZE);
 
-                if (grid[row][col] != null) {
-                    g2d.setColor(grid[row][col].color);
+                if (currentGrid[row][col] != null) {
+                    g2d.setColor(currentGrid[row][col].color);
                     g2d.fillRect(x, y, CELL_SIZE, CELL_SIZE);
                     g2d.setColor(Color.BLUE);
                 }

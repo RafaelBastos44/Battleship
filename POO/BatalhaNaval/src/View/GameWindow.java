@@ -45,6 +45,7 @@ public class GameWindow extends JFrame {
                     isPlayerOneTurn = false;
                     boardPanel.clearGrid(); // Clear board for player 2
                     shipPanel.resetSelection(); // Reset ship selection for player 2
+                    boardPanel.switchPlayer(); // Switch to player 2
                     readyButton.setText(playerTwoName + ": Tabuleiro Pronto");
                     JOptionPane.showMessageDialog(GameWindow.this, playerTwoName + ", posicione seus navios.");
                     boardPanel.requestFocusInWindow(); // Ensure the focus is on the boardPanel
@@ -57,7 +58,7 @@ public class GameWindow extends JFrame {
         });
 
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(700, 540); // Adjust size as needed
+        setSize(1000, 800); // Adjust size as needed
         setVisible(true);
 
         // Ensure the focus is on the boardPanel initially
