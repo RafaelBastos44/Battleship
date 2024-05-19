@@ -177,6 +177,20 @@ public class BoardPanel extends JPanel {
         }
     }
 
+    public void printGrid() {
+        for (int row = 0; row < GRID_SIZE; row++) {
+            for (int col = 0; col < GRID_SIZE; col++) {
+                if (grid[row][col] != null) {
+                    System.out.print(grid[row][col].getClass().getSimpleName().charAt(0) + " ");
+                } else {
+                    System.out.print("~ ");
+                }
+            }
+            System.out.println();
+        }
+        System.out.println();
+    }
+
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);

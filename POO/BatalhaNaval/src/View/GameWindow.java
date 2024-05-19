@@ -33,5 +33,10 @@ public class GameWindow extends JFrame {
         bottomPanel.add(readyButton, BorderLayout.SOUTH);
 
         mainPanel.add(bottomPanel, BorderLayout.SOUTH);
+
+        //make ready button execute printGrid() when clicked
+        readyButton.addActionListener(e -> {
+            boardPanel.printGrid();
+        });
     }
 }
