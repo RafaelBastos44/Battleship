@@ -191,6 +191,15 @@ public class BoardPanel extends JPanel {
         System.out.println();
     }
 
+    public void clearGrid() {
+        for (int row = 0; row < GRID_SIZE; row++) {
+            for (int col = 0; col < GRID_SIZE; col++) {
+                grid[row][col] = null;
+            }
+        }
+        repaint();
+    }
+
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
