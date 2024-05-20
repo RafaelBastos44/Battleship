@@ -107,6 +107,7 @@ public class BoardPanel extends JPanel {
                     currentShip = null;
                     currentRow = -1;
                     currentCol = -1;
+                    shipPanel.deselectShip(); // Deseleciona o navio no painel de navios
                     repaint();
                 }
             }
