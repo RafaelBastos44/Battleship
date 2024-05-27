@@ -15,12 +15,11 @@ public class Tabuleiro {
     }
 
     public boolean posicionarNavio(int linha, int coluna, char tipo, int orientacao) {
-        if(linha < 0 || linha >= tamanho || coluna < 0 || coluna >= tamanho) {
+        if (linha < 0 || linha >= tamanho || coluna < 0 || coluna >= tamanho) {
             return false;
         }
-        double radianos,theta = 0;
-        int x1, x2, y1, y2, cos, sin = 0;
-        int tamanhoNavio = 0;
+
+        int tamanhoNavio;
         switch (tipo) {
             case 'S':
                 tamanhoNavio = 1;
@@ -32,8 +31,7 @@ public class Tabuleiro {
                 tamanhoNavio = 2;
                 break;
             case 'H':
-                tamanhoNavio = 3;
-                break;
+                return posicionarHidroaviao(linha, coluna, tipo, orientacao);
             case 'G':
                 tamanhoNavio = 5;
                 break;
@@ -41,130 +39,102 @@ public class Tabuleiro {
                 return false;
         }
 
-        if (tipo == 'H') {
-            radianos = Math.toRadians(90); //Transforma graus em radianos
-            theta = radianos*orientacao; //Quantos radianos quer rotacionar
-            cos = (int) Math.cos(theta); //Calcula o cos de theta e passa para int
-            sin = (int) Math.sin(theta); //Calcula o sen de theta e passa para int
-
-            // Nosso "x" representa linha e "y" coluna
-            //                                                    [] -> (x, y)
-            //Valores de translatação do ponto    (x+1, y-1) <- []  [] -> (x+1, y+1)
-            x1 = 1; //(x-x-1)
-            y1 = -1; //(y-y-1)
-            x2 = 1; //(x-x+1)
-            y2 = 1; //(y-y+1)
-
-            //Verica se está ou não na matriz
-            if (((linha+((x1*cos)-(y1*sin))) > tamanho - 1) || ((linha+((x1*cos)-(y1*sin))) < 0)) {
-                return false;
-            }
-            if (((linha+((x2*cos)-(y2*sin))) > tamanho - 1) || ((linha+((x2*cos)-(y2*sin))) < 0)) {
-                return false;
-            }
-            if (((coluna+((x1*sin)+(y1*cos))) > tamanho - 1) || (coluna+((x1*sin)+(y1*cos)) < 0))  {
-                return false;
-            }
-            if (((coluna+((x2*sin)+(y2*cos))) > tamanho - 1) || ((coluna+((x2*sin)+(y2*cos))) < 0)) {
-                return false;
-            } 
-            
-            //Verifica se já existe outro navio no local
-            if ((tabuleiro[linha][coluna]) != '~') {
-                return false;
-            }
-            if ((tabuleiro[linha+((x1*cos)-(y1*sin))][coluna+((x1*sin)+(y1*cos))]) != '~') {
-                return false;
-            }
-            if ((tabuleiro[linha+((x2*cos)-(y2*sin))][coluna+((x2*sin)+(y2*cos))]) != '~') {
-                return false;
-            }
-
-            //Altera matriz do tabuleiro
-            //Aqui fazemos a rotação de fato, pela formula x' = x cos(theta) - y sen(theta) e y' = x sen(theta) + y cos(theta)
-            tabuleiro[linha][coluna] = tipo;
-            tabuleiro[linha+((x1*cos)-(y1*sin))][coluna+((x1*sin)+(y1*cos))] = tipo; 
-            tabuleiro[linha+((x2*cos)-(y2*sin))][coluna+((x2*sin)+(y2*cos))] = tipo;
-
-            return true;
+        // Ajusta a orientação para garantir apenas 0 (horizontal) e 1 (vertical)
+        if (tipo != 'H' && orientacao > 1) {
+            orientacao %= 2;
         }
 
-        if (orientacao < 0 || orientacao > 3) {
+        switch (orientacao) {
+            case 0: // Horizontal
+                if (coluna + tamanhoNavio > tamanho) {
+                    return false;
+                }
+                for (int i = 0; i < tamanhoNavio; i++) {
+                    if (tabuleiro[linha][coluna + i] != '~') {
+                        return false;
+                    }
+                }
+                for (int i = 0; i < tamanhoNavio; i++) {
+                    tabuleiro[linha][coluna + i] = tipo;
+                }
+                break;
+            case 1: // Vertical
+                if (linha + tamanhoNavio > tamanho) {
+                    return false;
+                }
+                for (int i = 0; i < tamanhoNavio; i++) {
+                    if (tabuleiro[linha + i][coluna] != '~') {
+                        return false;
+                    }
+                }
+                for (int i = 0; i < tamanhoNavio; i++) {
+                    tabuleiro[linha + i][coluna] = tipo;
+                }
+                break;
+            default:
+                return false;
+        }
+
+        return true;
+    }
+
+    private boolean posicionarHidroaviao(int linha, int coluna, char tipo, int orientacao) {
+        double radianos, theta;
+        int x1, x2, y1, y2, cos, sin;
+
+        radianos = Math.toRadians(90); // Transforma graus em radianos
+        theta = radianos * orientacao; // Quantos radianos quer rotacionar
+        cos = (int) Math.cos(theta); // Calcula o cos de theta e passa para int
+        sin = (int) Math.sin(theta); // Calcula o sen de theta e passa para int
+
+        // Valores de translatação do ponto
+        x1 = 1; // (x-x-1)
+        y1 = -1; // (y-y-1)
+        x2 = 1; // (x-x+1)
+        y2 = 1; // (y-y+1)
+
+        // Verifica se está ou não na matriz
+        if (linha + ((x1 * cos) - (y1 * sin)) > tamanho - 1 || linha + ((x1 * cos) - (y1 * sin)) < 0) {
+            return false;
+        }
+        if (linha + ((x2 * cos) - (y2 * sin)) > tamanho - 1 || linha + ((x2 * cos) - (y2 * sin)) < 0) {
+            return false;
+        }
+        if (coluna + ((x1 * sin) + (y1 * cos)) > tamanho - 1 || coluna + ((x1 * sin) + (y1 * cos)) < 0) {
+            return false;
+        }
+        if (coluna + ((x2 * sin) + (y2 * cos)) > tamanho - 1 || coluna + ((x2 * sin) + (y2 * cos)) < 0) {
             return false;
         }
 
-        if (orientacao == 0) {
-            if (coluna + tamanhoNavio > tamanho) {
-                return false;
-            }
-            for (int i = 0; i < tamanhoNavio; i++) {
-                if (tabuleiro[linha][coluna + i] != '~') {
-                    return false;
-                }
-            }
-            for (int i = 0; i < tamanhoNavio; i++) {
-                // Preenche o tabuleiro com o tipo do navio
-                tabuleiro[linha][coluna + i] = tipo;
-            }
+        // Verifica se já existe outro navio no local
+        if (tabuleiro[linha][coluna] != '~') {
+            return false;
+        }
+        if (tabuleiro[linha + ((x1 * cos) - (y1 * sin))][coluna + ((x1 * sin) + (y1 * cos))] != '~') {
+            return false;
+        }
+        if (tabuleiro[linha + ((x2 * cos) - (y2 * sin))][coluna + ((x2 * sin) + (y2 * cos))] != '~') {
+            return false;
         }
 
-        else if (orientacao == 1) {
-            if (linha + tamanhoNavio > tamanho) {
-                return false;
-            }
-            for (int i = 0; i < tamanhoNavio; i++) {
-                if (tabuleiro[linha + i][coluna] != '~') {
-                    return false;
-                }
-            }
-            for (int i = 0; i < tamanhoNavio; i++) {
-                // Preenche o tabuleiro com o tipo do navio
-                tabuleiro[linha + i][coluna] = tipo;
-            }
-        }
-        
-        else if (orientacao == 2) {
-            if (coluna - tamanhoNavio < 0) {
-                return false;
-            }
-            for (int i = 0; i < tamanhoNavio; i++) {
-                if (tabuleiro[linha][coluna - i] != '~') {
-                    return false;
-                }
-            }
-            for (int i = 0; i < tamanhoNavio; i++) {
-                // Preenche o tabuleiro com o tipo do navio
-                tabuleiro[linha][coluna - i] = tipo;
-            }
-        }
-        
-        else if (orientacao == 3) {
-            if (linha - tamanhoNavio < 0) {
-                return false;
-            }
-            for (int i = 0; i < tamanhoNavio; i++) {
-                if (tabuleiro[linha - i][coluna] != '~') {
-                    return false;
-                }
-            }
-            for (int i = 0; i < tamanhoNavio; i++) {
-                // Preenche o tabuleiro com o tipo do navio
-                tabuleiro[linha - i][coluna] = tipo;
-            }
-        }
+        // Altera matriz do tabuleiro
+        // Aqui fazemos a rotação de fato, pela fórmula x' = x cos(theta) - y sen(theta) e y' = x sen(theta) + y cos(theta)
+        tabuleiro[linha][coluna] = tipo;
+        tabuleiro[linha + ((x1 * cos) - (y1 * sin))][coluna + ((x1 * sin) + (y1 * cos))] = tipo;
+        tabuleiro[linha + ((x2 * cos) - (y2 * sin))][coluna + ((x2 * sin) + (y2 * cos))] = tipo;
+
         return true;
     }
 
     public String atacar(int linha, int coluna, Tabuleiro tabuleiroOculto) {
-        char cell;
         if (linha < 0 || linha >= tamanho || coluna < 0 || coluna >= tamanho) {
-            return "Posiçao inválida.";
+            return "Posição inválida.";
         }
-        cell = tabuleiro[linha][coluna];
+
+        char cell = tabuleiro[linha][coluna];
         if (cell != '~' && cell != 'X' && cell != 'O') {
-            //Elementos na matriz, diferentes de "~", "X" e "O", representam um navio
-            tabuleiroOculto.setCelula(linha, coluna, 'X'); // Marca que um navio foi atingido
-            // Retorna o tipo do navio com base na letra
+            tabuleiroOculto.setCelula(linha, coluna, 'X');
             switch (cell) {
                 case 'G':
                     return "Couraçado atingido!";
@@ -175,13 +145,13 @@ public class Tabuleiro {
                 case 'C':
                     return "Cruzador atingido!";
                 case 'H':
-                    return "Hidroaviao atingido!";
+                    return "Hidroavião atingido!";
             }
         } else if (cell == '~') {
-            tabuleiroOculto.setCelula(linha, coluna, 'O');; // Tiro na água
+            tabuleiroOculto.setCelula(linha, coluna, 'O');
             return "Tiro na água.";
         }
-        return "Tiro já realizado nesta posiçao.";
+        return "Tiro já realizado nesta posição.";
     }
 
     public void exibirTabuleiro() {
@@ -205,5 +175,9 @@ public class Tabuleiro {
 
     public void setCelula(int i, int j, char valor) {
         tabuleiro[i][j] = valor;
+    }
+
+    public char[][] getTabuleiro() {
+        return tabuleiro;
     }
 }

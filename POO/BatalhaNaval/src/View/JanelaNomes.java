@@ -21,15 +21,14 @@ public class JanelaNomes {
             jogador2 = "Jogador 2";
         }
 
-        System.out.println("Jogador 1: " + jogador1);
-        System.out.println("Jogador 2: " + jogador2);
-
-        new GameWindow(jogador1, jogador2).setVisible(true);
+        // new GameWindow(jogador1, jogador2).setVisible(true);
     }
 
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> {
-            new JanelaNomes();
-        });
+    public String getJogador1() {
+        return jogador1;
+    }
+
+    public String getJogador2() {
+        return jogador2;
     }
 }
