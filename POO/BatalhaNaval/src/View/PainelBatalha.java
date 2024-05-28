@@ -16,8 +16,10 @@ public class PainelBatalha extends JPanel implements AtaqueListener {
     private Tabuleiro tabuleiroOcultoJogador2;
     private JLabel labelTurno;
     private JLabel labelAtaquesRestantes;
+    private JLabel labelAcerto;
     private String nomeJogador1;
     private String nomeJogador2;
+    private String resultado;
     private BatalhaNaval batalhaNaval;
 
     public PainelBatalha(Tabuleiro tabuleiro1, Tabuleiro tabuleiro2, Tabuleiro tabuleiroOculto1, Tabuleiro tabuleiroOculto2, String nomeJogador1, String nomeJogador2, BatalhaNaval batalhaNaval) {
@@ -56,44 +58,26 @@ public class PainelBatalha extends JPanel implements AtaqueListener {
         labelAtaquesRestantes = new JLabel("Ataques restantes: " + batalhaNaval.getAtaquesRestantes());
         labelAtaquesRestantes.setHorizontalAlignment(JLabel.CENTER);
 
+        labelAcerto = new JLabel(resultado);
+        labelAcerto.setHorizontalAlignment(JLabel.CENTER);
+
         // Painel para os labels
         JPanel panelLabels = new JPanel(new GridLayout(2, 1));
         panelLabels.add(labelTurno);
         panelLabels.add(labelAtaquesRestantes);
 
+        JPanel panelResultado = new JPanel();
+        panelResultado.add(labelAcerto);
+
         // Adiciona componentes ao painel principal
         add(panelTabuleiros, BorderLayout.CENTER);
         add(panelLabels, BorderLayout.NORTH);
-
-        // Botão para realizar ataque
-        JButton btnAtacar = new JButton("Atacar");
-        btnAtacar.addActionListener(e -> {
-            // Solicita as coordenadas do ataque
-            String input = JOptionPane.showInputDialog(this, "Digite as coordenadas de ataque (formato: linha,coluna):");
-            if (input == null || !input.matches("\\d+,\\d+")) {
-                JOptionPane.showMessageDialog(this, "Coordenadas inválidas! Tente novamente.");
-                return;
-            }
-
-            String[] partes = input.split(",");
-            int linha = Integer.parseInt(partes[0]);
-            int coluna = Integer.parseInt(partes[1]);
-
-            // Verificar se as coordenadas estão dentro dos limites do tabuleiro
-            if (linha < 0 || linha >= tabuleiroJogador1.getTamanho() || coluna < 0 || coluna >= tabuleiroJogador1.getTamanho()) {
-                JOptionPane.showMessageDialog(this, "Coordenadas fora dos limites do tabuleiro!");
-                return;
-            }
-
-            batalhaNaval.realizarAtaque(linha, coluna); 
-        });
-
-        add(btnAtacar, BorderLayout.SOUTH);
+        add(panelResultado, BorderLayout.SOUTH);
     }
 
     @Override
     public void onAtaque(int linha, int coluna, String resultado, int ataquesRestantes) {
-        JOptionPane.showMessageDialog(this, resultado);
+        labelAcerto.setText(resultado);
 
         // Atualiza os labels
         labelTurno.setText("Turno de " + (batalhaNaval.isVezJogador1() ? nomeJogador1 : nomeJogador2));
@@ -104,5 +88,12 @@ public class PainelBatalha extends JPanel implements AtaqueListener {
         componenteTabuleiroOcultoJogador2.repaint();
     }
 
+    public ComponenteTabuleiro getComponenteTabuleiroBatalhaJogador1() {
+        return componenteTabuleiroOcultoJogador1;
+    }
+
+    public ComponenteTabuleiro getComponenteTabuleiroBatalhaJogador2() {
+        return componenteTabuleiroOcultoJogador2;
+    }
     
 }

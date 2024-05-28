@@ -1,13 +1,11 @@
 package View;
 
 import javax.swing.*;
-
-import Controller.BatalhaNaval;
-
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.geom.Rectangle2D;
 import Model.Tabuleiro;
+import Controller.BatalhaNaval;
 
 public class ComponenteTabuleiro extends JPanel {
     private int numCelulas;
@@ -18,14 +16,15 @@ public class ComponenteTabuleiro extends JPanel {
     private int linhaTemporaria = -1;
     private int colunaTemporaria = -1;
     private boolean navioTemporarioAtivo = false;
+    private boolean habilitado = true;
     private BatalhaNaval batalhaNaval;
 
-    public ComponenteTabuleiro(int numCelulas, int tamanhoCelula, Tabuleiro tabuleiro, PainelPosicionamento janela, boolean Posionando, BatalhaNaval batalhaNaval) {
-        System.out.println("BatalhaNaval no ComponenteTabuleiro: " + batalhaNaval); // Verificar se é nulo
+    public ComponenteTabuleiro(int numCelulas, int tamanhoCelula, Tabuleiro tabuleiro, PainelPosicionamento janela, boolean Posicionando, BatalhaNaval batalhaNaval) {
         this.numCelulas = numCelulas;
         this.tamanhoCelula = tamanhoCelula;
         this.tabuleiro = tabuleiro;
         this.janela = janela;
+        this.batalhaNaval = batalhaNaval;
 
         setPreferredSize(new Dimension(numCelulas * tamanhoCelula, numCelulas * tamanhoCelula));
 
@@ -35,15 +34,15 @@ public class ComponenteTabuleiro extends JPanel {
                 int linha = e.getY() / tamanhoCelula;
                 int coluna = e.getX() / tamanhoCelula;
                 System.out.println(linha + " " + coluna);
-                if (SwingUtilities.isLeftMouseButton(e) && !Posionando) { // Ataque
+                if (SwingUtilities.isLeftMouseButton(e) && !Posicionando && habilitado) { // Ataque
                     batalhaNaval.realizarAtaque(linha, coluna);
-                }else if (SwingUtilities.isRightMouseButton(e)) {
+                } else if (SwingUtilities.isRightMouseButton(e)) {
                     if (navioTemporarioAtivo) {
                         rotacionarNavioTemporario();
                         repaint();
                     }
                 } else {
-                    if (janela.getComponenteNavio().getNavioSelecionado() != null) {
+                    if (janela != null && janela.getComponenteNavio().getNavioSelecionado() != null) {
                         linhaTemporaria = linha;
                         colunaTemporaria = coluna;
                         navioTemporarioAtivo = true;
@@ -60,7 +59,13 @@ public class ComponenteTabuleiro extends JPanel {
             public void keyPressed(KeyEvent e) {
                 if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
                     if (navioTemporarioAtivo) {
-                        Navio navioSelecionado = janela.getComponenteNavio().getNavioSelecionado();
+                        Navio navioSelecionado;
+                        if (janela != null) {
+                            navioSelecionado = janela.getComponenteNavio().getNavioSelecionado();
+                        } else {
+                            navioSelecionado = null;
+                        }
+                        
                         if (navioSelecionado != null) {
                             if (tabuleiro.posicionarNavio(linhaTemporaria, colunaTemporaria, navioSelecionado.getSymbol(), orientacao)) {
                                 // Coloca o navio no tabuleiro e incrementa o contador
@@ -85,7 +90,9 @@ public class ComponenteTabuleiro extends JPanel {
                         }
                     } else {
                         // Deseleciona o navio no ComponenteNavio
-                        janela.getComponenteNavio().deselectNavio();
+                        if (janela != null) {
+                            janela.getComponenteNavio().deselectNavio();
+                        }
                     }
                 }
             }
@@ -93,6 +100,7 @@ public class ComponenteTabuleiro extends JPanel {
     }
 
     private void rotacionarNavioTemporario() {
+        if (janela == null) return;
         char tipoNavio = janela.getComponenteNavio().getNavioSelecionado().getSymbol();
         if (tipoNavio == 'H') {
             orientacao = (orientacao + 1) % 4; // Hidroavião tem 4 orientações
@@ -121,7 +129,12 @@ public class ComponenteTabuleiro extends JPanel {
 
         // Desenhar o navio temporário
         if (navioTemporarioAtivo && linhaTemporaria != -1 && colunaTemporaria != -1) {
-            Navio navioSelecionado = janela.getComponenteNavio().getNavioSelecionado();
+            Navio navioSelecionado;
+            if (janela != null) {
+                navioSelecionado = janela.getComponenteNavio().getNavioSelecionado();
+            } else {
+                navioSelecionado = null;
+            }
             if (navioSelecionado != null) {
                 desenharNavioTemporario(g2d, linhaTemporaria, colunaTemporaria, navioSelecionado, orientacao);
             }
@@ -176,5 +189,8 @@ public class ComponenteTabuleiro extends JPanel {
         return new Dimension(numCelulas * tamanhoCelula, numCelulas * tamanhoCelula);
     }
 
-    
+    public void setHabilitado(boolean habilitado) {
+        this.habilitado = habilitado;
+        this.setEnabled(habilitado);
+    }
 }

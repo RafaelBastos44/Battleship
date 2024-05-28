@@ -5,6 +5,7 @@ import View.JanelaPosicionamento;
 import View.JanelaNomes;
 import View.JanelaBatalha;
 import View.PainelBatalha;
+import View.ComponenteTabuleiro;
 
 import javax.swing.*;
 import java.util.ArrayList;
@@ -21,6 +22,10 @@ public class BatalhaNaval {
     private int ataquesRestantes = 3;
     private List<AtaqueListener> listeners = new ArrayList<>();
     private JanelaBatalha janelaBatalha;
+
+    // Armazenar referências dos componentes de tabuleiro
+    private ComponenteTabuleiro componenteTabuleiroOcultoJogador1;
+    private ComponenteTabuleiro componenteTabuleiroOcultoJogador2;
 
     public BatalhaNaval() {
         tabuleiroJogador1 = new Tabuleiro(15);
@@ -48,8 +53,16 @@ public class BatalhaNaval {
         // Adicione o listener aqui, na classe JanelaBatalha
         adicionarAtaqueListener(janelaBatalha.getPainelBatalha());
 
+        PainelBatalha painelBatalha = janelaBatalha.getPainelBatalha();
+        componenteTabuleiroOcultoJogador1 = painelBatalha.getComponenteTabuleiroBatalhaJogador1();
+        componenteTabuleiroOcultoJogador2 = painelBatalha.getComponenteTabuleiroBatalhaJogador2();
+
+        componenteTabuleiroOcultoJogador1.setHabilitado(!vezJogador1);
+        componenteTabuleiroOcultoJogador2.setHabilitado(vezJogador1);
+
         // Passar a referência da janela para o controlador
         this.setJanelaBatalha(janelaBatalha);
+
     }
 
     public void realizarAtaque(int linha, int coluna) {
@@ -80,9 +93,14 @@ public class BatalhaNaval {
                     // Encerrar o programa
                     System.exit(0);
                 }
+            
             } else if (ataquesRestantes == 0) { // Alterna o turno se acabaram os ataques
+
                 vezJogador1 = !vezJogador1; 
                 ataquesRestantes = 3; 
+
+                componenteTabuleiroOcultoJogador1.setHabilitado(!vezJogador1);
+                componenteTabuleiroOcultoJogador2.setHabilitado(vezJogador1);
             } 
     
             // Notificar os listeners sobre o ataque (DEPOIS de alternar o turno E verificar o fim de jogo)
