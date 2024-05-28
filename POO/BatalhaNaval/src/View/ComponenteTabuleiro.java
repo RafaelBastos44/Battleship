@@ -1,6 +1,9 @@
 package View;
 
 import javax.swing.*;
+
+import Controller.BatalhaNaval;
+
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.geom.Rectangle2D;
@@ -15,8 +18,10 @@ public class ComponenteTabuleiro extends JPanel {
     private int linhaTemporaria = -1;
     private int colunaTemporaria = -1;
     private boolean navioTemporarioAtivo = false;
+    private BatalhaNaval batalhaNaval;
 
-    public ComponenteTabuleiro(int numCelulas, int tamanhoCelula, Tabuleiro tabuleiro, PainelPosicionamento janela) {
+    public ComponenteTabuleiro(int numCelulas, int tamanhoCelula, Tabuleiro tabuleiro, PainelPosicionamento janela, boolean Posionando, BatalhaNaval batalhaNaval) {
+        System.out.println("BatalhaNaval no ComponenteTabuleiro: " + batalhaNaval); // Verificar se é nulo
         this.numCelulas = numCelulas;
         this.tamanhoCelula = tamanhoCelula;
         this.tabuleiro = tabuleiro;
@@ -29,8 +34,10 @@ public class ComponenteTabuleiro extends JPanel {
             public void mouseClicked(MouseEvent e) {
                 int linha = e.getY() / tamanhoCelula;
                 int coluna = e.getX() / tamanhoCelula;
-
-                if (SwingUtilities.isRightMouseButton(e)) {
+                System.out.println(linha + " " + coluna);
+                if (SwingUtilities.isLeftMouseButton(e) && !Posionando) { // Ataque
+                    batalhaNaval.realizarAtaque(linha, coluna);
+                }else if (SwingUtilities.isRightMouseButton(e)) {
                     if (navioTemporarioAtivo) {
                         rotacionarNavioTemporario();
                         repaint();
@@ -168,4 +175,6 @@ public class ComponenteTabuleiro extends JPanel {
     public Dimension getPreferredSize() {
         return new Dimension(numCelulas * tamanhoCelula, numCelulas * tamanhoCelula);
     }
+
+    
 }

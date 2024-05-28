@@ -12,7 +12,7 @@ public class PainelPosicionamento extends JPanel {
 
     public PainelPosicionamento(Tabuleiro tabuleiro, JanelaPosicionamento janela, String nomeJogador) {
         this.nomeJogador = nomeJogador; // Inicialize o atributo com o nome do jogador
-        componenteTabuleiro = new ComponenteTabuleiro(15, 30, tabuleiro, this);
+        componenteTabuleiro = new ComponenteTabuleiro(15, 30, tabuleiro, this, true, null);
         componenteNavio = new ComponenteNavio();
 
         setLayout(new BorderLayout());

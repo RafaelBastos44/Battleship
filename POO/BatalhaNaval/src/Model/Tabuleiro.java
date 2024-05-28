@@ -165,6 +165,19 @@ public class Tabuleiro {
         System.out.println("\n");
     }
 
+    public boolean todosNaviosAfundados(Tabuleiro tabuleiro, Tabuleiro tabuleiroOculto) {
+        boolean fim = true;
+        for (int i = 0; i < tabuleiro.getTamanho(); i++) {
+            for (int j = 0; j < tabuleiro.getTamanho(); j++) {
+                if(tabuleiro.getCelula(i, j) != '~' && tabuleiroOculto.getCelula(i, j) != 'X')
+                {
+                    fim = false;
+                }
+            }
+        }
+        return fim;
+    }
+
     public int getTamanho() {
         return tamanho;
     }
