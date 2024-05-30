@@ -6,10 +6,7 @@ import View.JanelaNomes;
 import View.JanelaBatalha;
 import View.PainelBatalha;
 import View.ComponenteTabuleiro;
-
-import javax.swing.*;
-import java.util.ArrayList;
-import java.util.List;
+import View.JanelaFimDeJogo;
 
 public class BatalhaNaval {
     private Tabuleiro tabuleiroJogador1;
@@ -20,7 +17,6 @@ public class BatalhaNaval {
     private String nomeJogador2;
     private boolean vezJogador1 = true;
     private int ataquesRestantes = 3;
-    private List<AtaqueListener> listeners = new ArrayList<>();
     private JanelaBatalha janelaBatalha;
 
     // Armazenar referências dos componentes de tabuleiro
@@ -35,12 +31,12 @@ public class BatalhaNaval {
         nomeJogador1 = janelaNomes.getJogador1();
         nomeJogador2 = janelaNomes.getJogador2();
 
+        JanelaPosicionamento janelaPosicionamento = new JanelaPosicionamento(tabuleiroJogador1, tabuleiroJogador2, nomeJogador1, nomeJogador2, this::iniciarBatalha);
+        janelaPosicionamento.setSize(680, 550);
+
         JanelaBatalha janelaBatalha = new JanelaBatalha(tabuleiroJogador1, tabuleiroJogador2, tabuleiroOculto1, tabuleiroOculto2, nomeJogador1, nomeJogador2, this);
         janelaBatalha.setSize(960, 580);
         janelaBatalha.setVisible(false);
-
-        JanelaPosicionamento janelaPosicionamento = new JanelaPosicionamento(tabuleiroJogador1, tabuleiroJogador2, nomeJogador1, nomeJogador2, this::iniciarBatalha);
-        janelaPosicionamento.setSize(680, 550);
     }
 
     private void iniciarBatalha(Void v) {
@@ -48,10 +44,7 @@ public class BatalhaNaval {
         tabuleiroOculto2 = new Tabuleiro(15);
 
         janelaBatalha = new JanelaBatalha(tabuleiroJogador1, tabuleiroJogador2, tabuleiroOculto1, tabuleiroOculto2, nomeJogador1, nomeJogador2, this);
-        janelaBatalha.setSize(960, 580);
-
-        // Adicione o listener aqui, na classe JanelaBatalha
-        adicionarAtaqueListener(janelaBatalha.getPainelBatalha());
+        janelaBatalha.setSize(960, 570);
 
         PainelBatalha painelBatalha = janelaBatalha.getPainelBatalha();
         componenteTabuleiroOcultoJogador1 = painelBatalha.getComponenteTabuleiroBatalhaJogador1();
@@ -61,8 +54,7 @@ public class BatalhaNaval {
         componenteTabuleiroOcultoJogador2.setHabilitado(vezJogador1);
 
         // Passar a referência da janela para o controlador
-        this.setJanelaBatalha(janelaBatalha);
-
+        janelaBatalha.setVisible(true);
     }
 
     public void realizarAtaque(int linha, int coluna) {
@@ -73,49 +65,43 @@ public class BatalhaNaval {
             Tabuleiro tabuleiroOculto = vezJogador1 ? tabuleiroOculto2 : tabuleiroOculto1;
     
             String resultado = tabuleiroAtacado.atacar(linha, coluna, tabuleiroOculto);
-    
+            if (resultado.equals("Tiro já realizado nesta posição.")){
+                janelaBatalha.getPainelBatalha().onAtaque(linha, coluna, resultado, ataquesRestantes);
+                return;
+            }
+            
             ataquesRestantes--; // Decrementa o contador de ataques
-    
+
             // Verificar fim de jogo ou fim do turno
             if (tabuleiroAtacado.todosNaviosAfundados(tabuleiroAtacado, tabuleiroOculto)) {
                 String vencedor = vezJogador1 ? nomeJogador1 : nomeJogador2;
-                JOptionPane.showMessageDialog(null, vencedor + " venceu a batalha!");
-    
+
+                // Exibir a janela de fim de jogo
+                Runnable jogarNovamenteAction = () -> {
+                    new BatalhaNaval(); // Reiniciar o jogo
+                    janelaBatalha.dispose();
+                };
+
+                JanelaFimDeJogo janelaFimDeJogo = new JanelaFimDeJogo(vencedor, jogarNovamenteAction);
+                janelaFimDeJogo.setLocationRelativeTo(null); // Centralizar a janela
+                janelaFimDeJogo.setVisible(true);
+
                 // Encerrar a janela da batalha
                 janelaBatalha.dispose();
-    
-                // Lógica para reiniciar o jogo (opcional)
-                int resposta = JOptionPane.showConfirmDialog(null, "Deseja jogar novamente?", "Fim de Jogo", JOptionPane.YES_NO_OPTION);
-                if (resposta == JOptionPane.YES_OPTION) {
-                    // Reiniciar o jogo (chamar o construtor de BatalhaNaval novamente)
-                    new BatalhaNaval();
-                } else {
-                    // Encerrar o programa
-                    System.exit(0);
-                }
-            
-            } else if (ataquesRestantes == 0) { // Alterna o turno se acabaram os ataques
 
+            } else if (ataquesRestantes == 0) { // Alterna o turno se acabaram os ataques
                 vezJogador1 = !vezJogador1; 
                 ataquesRestantes = 3; 
 
                 componenteTabuleiroOcultoJogador1.setHabilitado(!vezJogador1);
                 componenteTabuleiroOcultoJogador2.setHabilitado(vezJogador1);
-            } 
-    
-            // Notificar os listeners sobre o ataque (DEPOIS de alternar o turno E verificar o fim de jogo)
-            for (AtaqueListener listener : listeners) {
-                listener.onAtaque(linha, coluna, resultado, ataquesRestantes);
             }
-    
+            janelaBatalha.getPainelBatalha().onAtaque(linha, coluna, resultado, ataquesRestantes);
+
+            // Notificar os listeners sobre o ataque (DEPOIS de alternar o turno E verificar o fim de jogo)
             System.out.println("Depois do ataque: vezJogador1 = " + vezJogador1); // Depuração
         } else {
-            JOptionPane.showMessageDialog(null, "Você já realizou todos os ataques deste turno!");
         }
-    }
-
-    public void adicionarAtaqueListener(AtaqueListener listener) {
-        listeners.add(listener);
     }
 
     public boolean isVezJogador1() {
@@ -126,11 +112,7 @@ public class BatalhaNaval {
         return ataquesRestantes;
     }
 
-    public void setJanelaBatalha(JanelaBatalha janelaBatalha) {
-        this.janelaBatalha = janelaBatalha;
-    }
-
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> new BatalhaNaval());
+        new BatalhaNaval();
     }
 }

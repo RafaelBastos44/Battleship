@@ -4,6 +4,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import Model.*;
 
 public class ComponenteNavio extends JPanel {
     private Navio[] navios;
@@ -34,7 +35,7 @@ public class ComponenteNavio extends JPanel {
                         repaint();
                     }
                 } else {
-                    navioSelecionado = null; // Desseleciona se clicar novamente
+                    navioSelecionado = null; // Deselect if clicked again
                     repaint();
                 }
             }
@@ -99,7 +100,18 @@ public class ComponenteNavio extends JPanel {
 
         for (int i = 0; i < navios.length; i++) {
             Navio navio = navios[i];
-            navio.draw(g2d, x, y, cellSize);
+
+            Color ColorShip = new Color(navio.getColorShip()[0], navio.getColorShip()[1], navio.getColorShip()[2]);
+            g2d.setColor(ColorShip);
+            if (navio.getSymbol() != 'H') {
+                 for(int j = 0; j < navio.getSize(); j++){
+                    g2d.fillRect(x + j * cellSize, y, cellSize, cellSize);
+                }
+            } else {
+                g2d.fillRect(x - cellSize + 30, y + cellSize, cellSize, cellSize); // Célula 1 à esquerda
+                g2d.fillRect(x + 30, y, cellSize, cellSize); // Célula 2 central
+                g2d.fillRect(x + cellSize + 30, y + cellSize, cellSize, cellSize); // Célula 3 à direita
+            }
             g2d.setColor(Color.BLACK);
             g2d.drawString(String.valueOf(limites[i] - contadores[i]), x + 5 * cellSize + 10, y + cellSize / 2);
             if (navio == navioSelecionado) {
@@ -107,7 +119,7 @@ public class ComponenteNavio extends JPanel {
                 if (navio instanceof Hidroaviao) {
                     g2d.drawRect(x + 30 - cellSize - 2, y - 2, 3 * cellSize + 4, 2 * cellSize + 4);
                 } else {
-                    g2d.drawRect(x - 2, y - 2, navio.size * cellSize + 4, cellSize + 4);
+                    g2d.drawRect(x - 2, y - 2, navio.getSize() * cellSize + 4, cellSize + 4);
                 }
             }
             y += cellSize + padding;

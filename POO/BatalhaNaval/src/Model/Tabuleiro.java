@@ -133,7 +133,8 @@ public class Tabuleiro {
         }
 
         char cell = tabuleiro[linha][coluna];
-        if (cell != '~' && cell != 'X' && cell != 'O') {
+        char celOculto = tabuleiroOculto.getCelula(linha, coluna);
+        if (cell != '~' && celOculto != 'X') {
             tabuleiroOculto.setCelula(linha, coluna, 'X');
             switch (cell) {
                 case 'G':
@@ -147,7 +148,7 @@ public class Tabuleiro {
                 case 'H':
                     return "Hidroavião atingido!";
             }
-        } else if (cell == '~') {
+        } else if (cell == '~' && celOculto != 'O') {
             tabuleiroOculto.setCelula(linha, coluna, 'O');
             return "Tiro na água.";
         }

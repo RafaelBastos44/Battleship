@@ -2,16 +2,12 @@ package View;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.*;
 import Model.Tabuleiro;
-import Controller.AtaqueListener;
 import Controller.BatalhaNaval;
 
-public class PainelBatalha extends JPanel implements AtaqueListener {
+public class PainelBatalha extends JPanel {
     private ComponenteTabuleiro componenteTabuleiroOcultoJogador1;
     private ComponenteTabuleiro componenteTabuleiroOcultoJogador2;
-    private Tabuleiro tabuleiroJogador1;
-    private Tabuleiro tabuleiroJogador2;
     private Tabuleiro tabuleiroOcultoJogador1;
     private Tabuleiro tabuleiroOcultoJogador2;
     private JLabel labelTurno;
@@ -23,8 +19,6 @@ public class PainelBatalha extends JPanel implements AtaqueListener {
     private BatalhaNaval batalhaNaval;
 
     public PainelBatalha(Tabuleiro tabuleiro1, Tabuleiro tabuleiro2, Tabuleiro tabuleiroOculto1, Tabuleiro tabuleiroOculto2, String nomeJogador1, String nomeJogador2, BatalhaNaval batalhaNaval) {
-        this.tabuleiroJogador1 = tabuleiro1;
-        this.tabuleiroJogador2 = tabuleiro2;
         this.tabuleiroOcultoJogador1 = tabuleiroOculto1;
         this.tabuleiroOcultoJogador2 = tabuleiroOculto2;
         this.nomeJogador1 = nomeJogador1;
@@ -75,7 +69,6 @@ public class PainelBatalha extends JPanel implements AtaqueListener {
         add(panelResultado, BorderLayout.SOUTH);
     }
 
-    @Override
     public void onAtaque(int linha, int coluna, String resultado, int ataquesRestantes) {
         labelAcerto.setText(resultado);
 

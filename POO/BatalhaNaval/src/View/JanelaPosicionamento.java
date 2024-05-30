@@ -10,14 +10,10 @@ public class JanelaPosicionamento extends JFrame {
     private PainelPosicionamento painelJogador1;
     private PainelPosicionamento painelJogador2;
     private boolean vezJogador1 = true;
-    private Tabuleiro tabuleiroJogador1;
-    private Tabuleiro tabuleiroJogador2;
     private JButton btnTrocarJogador;
     private Consumer<Void> onFinish;
 
     public JanelaPosicionamento(Tabuleiro tabuleiro1, Tabuleiro tabuleiro2, String nomeJogador1, String nomeJogador2, Consumer<Void> onFinish) {
-        this.tabuleiroJogador1 = tabuleiro1;
-        this.tabuleiroJogador2 = tabuleiro2;
         this.onFinish = onFinish;
 
         painelJogador1 = new PainelPosicionamento(tabuleiro1, this, nomeJogador1);

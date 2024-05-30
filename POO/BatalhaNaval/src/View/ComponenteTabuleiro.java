@@ -4,8 +4,10 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.geom.Rectangle2D;
-import Model.Tabuleiro;
+//import Model.Tabuleiro;
+import Model.*;
 import Controller.BatalhaNaval;
+
 
 public class ComponenteTabuleiro extends JPanel {
     private int numCelulas;
@@ -17,14 +19,12 @@ public class ComponenteTabuleiro extends JPanel {
     private int colunaTemporaria = -1;
     private boolean navioTemporarioAtivo = false;
     private boolean habilitado = true;
-    private BatalhaNaval batalhaNaval;
 
     public ComponenteTabuleiro(int numCelulas, int tamanhoCelula, Tabuleiro tabuleiro, PainelPosicionamento janela, boolean Posicionando, BatalhaNaval batalhaNaval) {
         this.numCelulas = numCelulas;
         this.tamanhoCelula = tamanhoCelula;
         this.tabuleiro = tabuleiro;
         this.janela = janela;
-        this.batalhaNaval = batalhaNaval;
 
         setPreferredSize(new Dimension(numCelulas * tamanhoCelula, numCelulas * tamanhoCelula));
 
@@ -155,7 +155,8 @@ public class ComponenteTabuleiro extends JPanel {
                 for (int j = 0; j < numCelulas; j++) {
                     if (tabuleiro.getCelula(i, j) == navio.getSymbol()) {
                         Rectangle2D.Double rect = new Rectangle2D.Double(j * tamanhoCelula, i * tamanhoCelula, tamanhoCelula, tamanhoCelula);
-                        g2d.setColor(navio.getColorShip());
+                        Color ColorShip = new Color(navio.getColorShip()[0], navio.getColorShip()[1], navio.getColorShip()[2]);
+                        g2d.setColor(ColorShip);
                         g2d.fill(rect);
                         g2d.setColor(Color.BLACK);
                         g2d.draw(rect);
@@ -180,8 +181,9 @@ public class ComponenteTabuleiro extends JPanel {
             case 'D': navio = new Destroyer(); break;
             case 'S': navio = new Submarino(); break;
             case 'H': navio = new Hidroaviao(); break;
+            default: return Color.WHITE;
         }
-        return navio != null ? navio.getColorShip() : Color.WHITE;
+        return new Color(navio.getColorShip()[0], navio.getColorShip()[1], navio.getColorShip()[2]);
     }
 
     @Override
