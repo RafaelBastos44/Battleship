@@ -12,10 +12,11 @@ class JanelaNomes {
 
     private void inicializaNomes() {
         jogador1 = JOptionPane.showInputDialog(null, "Nome do jogador 1:", "Nome 1", JOptionPane.QUESTION_MESSAGE);
+        System.err.println(jogador1);
         if (jogador1 == null || jogador1.isEmpty()) {
             jogador1 = "Jogador 1";
         }
-
+        System.err.println(jogador1);
         jogador2 = JOptionPane.showInputDialog(null, "Nome do jogador 2:", "Nome 2", JOptionPane.QUESTION_MESSAGE);
         if (jogador2 == null || jogador2.isEmpty()) {
             jogador2 = "Jogador 2";

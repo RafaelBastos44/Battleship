@@ -16,13 +16,15 @@ class JanelaPosicionamento extends JFrame {
     private Tabuleiro tabuleiroOculto1;
     private Tabuleiro tabuleiroOculto2;
     private int[] contadores = {0, 0, 0, 0, 0};
+    private String[] nomes;
 
-    public JanelaPosicionamento(Tabuleiro tabuleiro1, Tabuleiro tabuleiro2, Tabuleiro tabuleiroOculto1, Tabuleiro tabuleiroOculto2, Navio navioSelecionado, int jogador) {
+    public JanelaPosicionamento(Tabuleiro tabuleiro1, Tabuleiro tabuleiro2, Tabuleiro tabuleiroOculto1, Tabuleiro tabuleiroOculto2, Navio navioSelecionado, int jogador, String[] Nomes) {
         this.tabuleiro1 = tabuleiro1;
         this.tabuleiro2 = tabuleiro2;
         this.tabuleiroOculto1 = tabuleiroOculto1;
         this.tabuleiroOculto2 = tabuleiroOculto2;
         this.navioSelecionado = navioSelecionado;
+        this.nomes = Nomes;
 
         setSize(700,580);
         setLayout(new BorderLayout());
@@ -31,7 +33,7 @@ class JanelaPosicionamento extends JFrame {
 
         PainelNavios painelNavios = new PainelNavios(navioSelecionado, contadores);
 
-        JLabel labelNomeJogador = new JLabel("Jogador " + jogador);
+        JLabel labelNomeJogador = new JLabel(Nomes[jogador-1]);
         labelNomeJogador.setHorizontalAlignment(JLabel.CENTER);
         add(labelNomeJogador, BorderLayout.NORTH);
 
@@ -62,7 +64,7 @@ class JanelaPosicionamento extends JFrame {
         if(contadores[0] < 1 || contadores[1] < 1 || contadores[2] < 0 || contadores[3] < 0 || contadores[4] < 0) {
             return;
         }
-        new JanelaPosicionamento(tabuleiro1, tabuleiro2, tabuleiroOculto1, tabuleiroOculto2, navioSelecionado, 2);
+        new JanelaPosicionamento(tabuleiro1, tabuleiro2, tabuleiroOculto1, tabuleiroOculto2, navioSelecionado, 2, nomes);
         this.dispose();
     }
 
