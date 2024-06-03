@@ -2,7 +2,7 @@ package View;
 
 import javax.swing.*;
 
-public class JanelaNomes {
+class JanelaNomes {
     private String jogador1;
     private String jogador2;
 
@@ -20,8 +20,6 @@ public class JanelaNomes {
         if (jogador2 == null || jogador2.isEmpty()) {
             jogador2 = "Jogador 2";
         }
-
-        // new GameWindow(jogador1, jogador2).setVisible(true);
     }
 
     public String getJogador1() {

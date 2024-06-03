@@ -2,6 +2,20 @@
     "configurations": [
         {
             "type": "java",
+            "name": "Main",
+            "request": "launch",
+            "mainClass": "Main",
+            "projectName": "BatalhaNaval"
+        },
+        {
+            "type": "java",
+            "name": "BatalhaNaval",
+            "request": "launch",
+            "mainClass": "Controller.BatalhaNaval",
+            "projectName": "BatalhaNaval"
+        },
+        {
+            "type": "java",
             "name": "JogoBatalhaNaval",
             "request": "launch",
             "mainClass": "Model.JogoBatalhaNaval",

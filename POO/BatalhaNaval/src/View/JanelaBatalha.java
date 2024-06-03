@@ -1,29 +1,22 @@
 package View;
 
-import javax.swing.*;
-import java.awt.*;
+import java.awt.BorderLayout;
+
+import javax.swing.JFrame;
+
 import Model.Tabuleiro;
-import Controller.BatalhaNaval;
 
-public class JanelaBatalha extends JFrame {
-    private PainelBatalha painelBatalha;
+class JanelaBatalha extends JFrame{
+    private boolean[] vezJogador1 = {true};
 
-    public JanelaBatalha(Tabuleiro tabuleiroJogador1, Tabuleiro tabuleiroJogador2, Tabuleiro tabuleiroOculto1, Tabuleiro tabuleiroOculto2, String nomeJogador1, String nomeJogador2, BatalhaNaval batalhaNaval) {
-        
+    public JanelaBatalha(Tabuleiro tabuleiro1, Tabuleiro tabuleiro2, Tabuleiro tabuleiroOculto1, Tabuleiro tabuleiroOculto2){
         setTitle("Batalha Naval - Batalha");
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLayout(new BorderLayout());
+        setSize(1000, 600);
+        add(new PainelTabuleiroBatalha(tabuleiro1, tabuleiroOculto1,2,vezJogador1), BorderLayout.WEST);
+        add(new PainelTabuleiroBatalha(tabuleiro2, tabuleiroOculto2,1,vezJogador1), BorderLayout.EAST);
 
-        painelBatalha = new PainelBatalha(tabuleiroJogador1, tabuleiroJogador2, tabuleiroOculto1, tabuleiroOculto2, nomeJogador1, nomeJogador2, batalhaNaval);
-        add(painelBatalha, BorderLayout.CENTER);
-
-        setSize(800, 600);
-        setLocationRelativeTo(null);
         setVisible(true);
-        
-    }
-
-    public PainelBatalha getPainelBatalha() {
-        return painelBatalha;
     }
 }

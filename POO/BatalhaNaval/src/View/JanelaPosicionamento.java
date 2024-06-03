@@ -1,89 +1,73 @@
 package View;
 
 import javax.swing.*;
-import java.awt.*;
-import java.awt.event.*;
+
+import Model.Navio;
 import Model.Tabuleiro;
-import java.util.function.Consumer;
 
-public class JanelaPosicionamento extends JFrame {
-    private PainelPosicionamento painelJogador1;
-    private PainelPosicionamento painelJogador2;
-    private boolean vezJogador1 = true;
+import java.awt.*;
+// import java.awt.event.*;
+
+class JanelaPosicionamento extends JFrame {
     private JButton btnTrocarJogador;
-    private Consumer<Void> onFinish;
+    private Navio navioSelecionado;
+    private Tabuleiro tabuleiro1;
+    private Tabuleiro tabuleiro2;
+    private Tabuleiro tabuleiroOculto1;
+    private Tabuleiro tabuleiroOculto2;
+    private int[] contadores = {0, 0, 0, 0, 0};
 
-    public JanelaPosicionamento(Tabuleiro tabuleiro1, Tabuleiro tabuleiro2, String nomeJogador1, String nomeJogador2, Consumer<Void> onFinish) {
-        this.onFinish = onFinish;
+    public JanelaPosicionamento(Tabuleiro tabuleiro1, Tabuleiro tabuleiro2, Tabuleiro tabuleiroOculto1, Tabuleiro tabuleiroOculto2, Navio navioSelecionado, int jogador) {
+        this.tabuleiro1 = tabuleiro1;
+        this.tabuleiro2 = tabuleiro2;
+        this.tabuleiroOculto1 = tabuleiroOculto1;
+        this.tabuleiroOculto2 = tabuleiroOculto2;
+        this.navioSelecionado = navioSelecionado;
 
-        painelJogador1 = new PainelPosicionamento(tabuleiro1, this, nomeJogador1);
-        painelJogador2 = new PainelPosicionamento(tabuleiro2, this, nomeJogador2);
-
-        setTitle("Batalha Naval - Posicionamento");
-        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        setSize(700,580);
         setLayout(new BorderLayout());
+        setTitle("Batalha Naval - Posicionamento - Jogador " + jogador);
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
-        JPanel mainPanel = new JPanel(new CardLayout());
-        mainPanel.add(painelJogador1, "Jogador1");
-        mainPanel.add(painelJogador2, "Jogador2");
+        PainelNavios painelNavios = new PainelNavios(navioSelecionado, contadores);
 
-        btnTrocarJogador = new JButton("Trocar Jogador");
-        btnTrocarJogador.addActionListener(e -> trocarJogador(mainPanel));
+        JLabel labelNomeJogador = new JLabel("Jogador " + jogador);
+        labelNomeJogador.setHorizontalAlignment(JLabel.CENTER);
+        add(labelNomeJogador, BorderLayout.NORTH);
 
-        add(mainPanel, BorderLayout.CENTER);
-        add(btnTrocarJogador, BorderLayout.SOUTH);
-        pack();
-        setLocationRelativeTo(null);
-        setVisible(true);
-
-        painelJogador1.requestFocusForTabuleiro();
-    }
-
-    private void trocarJogador(JPanel mainPanel) {
-        CardLayout cl = (CardLayout) mainPanel.getLayout();
-
-        PainelPosicionamento painelAtual = vezJogador1 ? painelJogador1 : painelJogador2;
-        if (painelAtual.todosNaviosPosicionados()) {
-            vezJogador1 = !vezJogador1;
-            cl.next(mainPanel);
-
-            if (!vezJogador1) {
-                btnTrocarJogador.setText("Iniciar Batalha");
-                btnTrocarJogador.setEnabled(false);
-                iniciarVerificacao();
-                btnTrocarJogador.addActionListener(e -> finalizarPosicionamento());
-            } else {
-                painelJogador2.requestFocusForTabuleiro();
-            }
-        } else {
-            JOptionPane.showMessageDialog(this, "Posicione todos os navios antes de trocar de jogador!");
-            painelAtual.requestFocusForTabuleiro();
+        if (jogador == 1) {
+            PainelTabuleiro painelTabuleiro = new PainelTabuleiro(tabuleiro1, navioSelecionado, contadores);
+            add(painelNavios);
+            add(painelTabuleiro, BorderLayout.EAST);
         }
+        else {
+            PainelTabuleiro painelTabuleiro = new PainelTabuleiro(tabuleiro2, navioSelecionado, contadores);
+            add(painelNavios);
+            add(painelTabuleiro, BorderLayout.EAST);
+        }
+
+        if (jogador == 1) {
+            btnTrocarJogador = new JButton("Trocar para o jogador 2");
+            btnTrocarJogador.addActionListener(e -> abrirSegundaJanela());
+        }
+        else {
+            btnTrocarJogador = new JButton("Começar o jogo!");
+            btnTrocarJogador.addActionListener(e -> abrirJanelaAtaque());
+        }
+        add(btnTrocarJogador, BorderLayout.SOUTH);
+        setVisible(true);
     }
 
-    private void iniciarVerificacao() {
-        Timer timer = new Timer(1000, new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                if (painelJogador2.todosNaviosPosicionados()) {
-                    btnTrocarJogador.setEnabled(true);
-                    ((Timer)e.getSource()).stop();
-                }
-            }
-        });
-        timer.start();
-    }
-
-    private void finalizarPosicionamento() {
+    private void abrirSegundaJanela() {
+        if(contadores[0] < 1 || contadores[1] < 1 || contadores[2] < 0 || contadores[3] < 0 || contadores[4] < 0) {
+            return;
+        }
+        new JanelaPosicionamento(tabuleiro1, tabuleiro2, tabuleiroOculto1, tabuleiroOculto2, navioSelecionado, 2);
         this.dispose();
-        onFinish.accept(null);
     }
 
-    public PainelPosicionamento getPainelJogador1() {
-        return painelJogador1;
-    }
-
-    public PainelPosicionamento getPainelJogador2() {
-        return painelJogador2;
+    private void abrirJanelaAtaque() {
+        new JanelaBatalha(tabuleiro1, tabuleiro2, tabuleiroOculto1, tabuleiroOculto2);
+        this.dispose();
     }
 }

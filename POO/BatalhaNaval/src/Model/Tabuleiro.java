@@ -31,7 +31,7 @@ public class Tabuleiro {
                 tamanhoNavio = 2;
                 break;
             case 'H':
-                return posicionarHidroaviao(linha, coluna, tipo, orientacao);
+                return posicionarHidroaviao(linha, coluna, orientacao);
             case 'G':
                 tamanhoNavio = 5;
                 break;
@@ -78,7 +78,7 @@ public class Tabuleiro {
         return true;
     }
 
-    private boolean posicionarHidroaviao(int linha, int coluna, char tipo, int orientacao) {
+    private boolean posicionarHidroaviao(int linha, int coluna, int orientacao) {
         double radianos, theta;
         int x1, x2, y1, y2, cos, sin;
 
@@ -120,16 +120,16 @@ public class Tabuleiro {
 
         // Altera matriz do tabuleiro
         // Aqui fazemos a rotação de fato, pela fórmula x' = x cos(theta) - y sen(theta) e y' = x sen(theta) + y cos(theta)
-        tabuleiro[linha][coluna] = tipo;
-        tabuleiro[linha + ((x1 * cos) - (y1 * sin))][coluna + ((x1 * sin) + (y1 * cos))] = tipo;
-        tabuleiro[linha + ((x2 * cos) - (y2 * sin))][coluna + ((x2 * sin) + (y2 * cos))] = tipo;
+        tabuleiro[linha][coluna] = 'H';
+        tabuleiro[linha + ((x1 * cos) - (y1 * sin))][coluna + ((x1 * sin) + (y1 * cos))] = 'H';
+        tabuleiro[linha + ((x2 * cos) - (y2 * sin))][coluna + ((x2 * sin) + (y2 * cos))] = 'H';
 
         return true;
     }
 
     public String atacar(int linha, int coluna, Tabuleiro tabuleiroOculto) {
         if (linha < 0 || linha >= tamanho || coluna < 0 || coluna >= tamanho) {
-            return "Posição inválida.";
+            return "";
         }
 
         char cell = tabuleiro[linha][coluna];
@@ -152,7 +152,7 @@ public class Tabuleiro {
             tabuleiroOculto.setCelula(linha, coluna, 'O');
             return "Tiro na água.";
         }
-        return "Tiro já realizado nesta posição.";
+        return "";
     }
 
     public void exibirTabuleiro() {
@@ -166,11 +166,11 @@ public class Tabuleiro {
         System.out.println("\n");
     }
 
-    public boolean todosNaviosAfundados(Tabuleiro tabuleiro, Tabuleiro tabuleiroOculto) {
+    public boolean todosNaviosAfundados(Tabuleiro tabuleiroOculto) {
         boolean fim = true;
-        for (int i = 0; i < tabuleiro.getTamanho(); i++) {
-            for (int j = 0; j < tabuleiro.getTamanho(); j++) {
-                if(tabuleiro.getCelula(i, j) != '~' && tabuleiroOculto.getCelula(i, j) != 'X')
+        for (int i = 0; i < getTamanho(); i++) {
+            for (int j = 0; j < getTamanho(); j++) {
+                if(getCelula(i, j) != '~' && tabuleiroOculto.getCelula(i, j) != 'X')
                 {
                     fim = false;
                 }
@@ -193,5 +193,12 @@ public class Tabuleiro {
 
     public char[][] getTabuleiro() {
         return tabuleiro;
+    }
+
+    public void setTabuleiro(char[][] tabuleiro) {
+        this.tabuleiro = new char[tabuleiro.length][];
+        for (int i = 0; i < tabuleiro.length; i++) {
+            this.tabuleiro[i] = tabuleiro[i].clone();
+        }
     }
 }

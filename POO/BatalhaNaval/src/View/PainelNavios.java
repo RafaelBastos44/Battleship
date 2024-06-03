@@ -1,91 +1,64 @@
 package View;
 
+import java.awt.Color;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+
 import javax.swing.*;
-import java.awt.*;
+
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+
 import Model.*;
 
-public class ComponenteNavio extends JPanel {
+class PainelNavios extends JPanel{
     private Navio[] navios;
-    private Navio navioSelecionado = null;
-    private int[] limites = {1, 0, 0, 0, 0}; // Limites de navios (Couraçado, Cruzador, Destroyer, Submarino, Hidroavião)
-    private int[] contadores = {0, 0, 0, 0, 0}; // Contadores de navios colocados
+    private char[] tipos = {'G', 'C', 'D', 'S', 'H'};
+    private int[] limites = {1, 1, 0, 0, 0}; // Limites de navios (Couraçado, Cruzador, Destroyer, Submarino, Hidroavião)
+    private int[] contadores; // Contadores de navios colocados
+    private Navio navioSelecionado;
 
-    public ComponenteNavio() {
+    public PainelNavios(Navio navioSelecionado, int[] contadores) {
+        this.navioSelecionado = navioSelecionado;
+        this.contadores = contadores;
+
         navios = new Navio[]{
-            new Couracado(),
-            new Cruzador(),
-            new Destroyer(),
-            new Submarino(),
-            new Hidroaviao()
+            new Navio('G'),
+            new Navio('C'),
+            new Navio('D'),
+            new Navio('S'),
+            new Navio('H')
         };
 
         addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                if (navioSelecionado == null) {
+                if (navioSelecionado.getSymbol() == 'N') {
                     int y = e.getY();
                     int cellSize = 30;
                     int padding = 20;
                     int navioIndex = y / (cellSize + padding);
-                    if (navioIndex < navios.length && contadores[navioIndex] < limites[navioIndex]) {
-                        navioSelecionado = navios[navioIndex];
-                        System.out.println("Navio selecionado: " + navioSelecionado.getClass().getSimpleName());
-                        repaint();
+                    // System.out.println(navioIndex);
+                    if (navioIndex < tipos.length && contadores[navioIndex] < limites[navioIndex]) {
+                        navioSelecionado.setSymbol(tipos[navioIndex]);
+                        System.out.println("Navio selecionado: " + navioSelecionado.getSymbol());
                     }
                 } else {
-                    navioSelecionado = null; // Deselect if clicked again
-                    repaint();
+                    navioSelecionado.setSymbol('N');
                 }
+                repaint();
             }
         });
+
     }
 
     public Navio getNavioSelecionado() {
         return navioSelecionado;
     }
 
-    public boolean todosNaviosPosicionados() {
-        for (int i = 0; i < contadores.length; i++) {
-            if (contadores[i] < limites[i]) {
-                return false; // Ainda há navios a serem posicionados
-            }
-        }
-        return true; // Todos os navios foram posicionados
-    }
-
-    public void incrementarContador(Navio navio) {
-        for (int i = 0; i < navios.length; i++) {
-            if (navios[i].getClass() == navio.getClass()) {
-                contadores[i]++;
-                break;
-            }
-        }
-        repaint();
-    }
-
-    public void resetContadores() {
-        for (int i = 0; i < contadores.length; i++) {
-            contadores[i] = 0;
-        }
-        repaint();
-    }
-
-    public char getTipoNavioSelecionado() {
-        if (navioSelecionado != null) {
-            return navioSelecionado.getSymbol();
-        }
-        return ' '; // Nenhum navio selecionado
-    }
-
     public void deselectNavio() {
         navioSelecionado = null;
         repaint();
-    }
-
-    public void resetSelection() {
-        navioSelecionado = null;
     }
 
     @Override
@@ -114,9 +87,9 @@ public class ComponenteNavio extends JPanel {
             }
             g2d.setColor(Color.BLACK);
             g2d.drawString(String.valueOf(limites[i] - contadores[i]), x + 5 * cellSize + 10, y + cellSize / 2);
-            if (navio == navioSelecionado) {
+            if (navio.getSymbol() == navioSelecionado.getSymbol()) {
                 g2d.setColor(Color.RED); // Indica o navio selecionado
-                if (navio instanceof Hidroaviao) {
+                if (navio.getSymbol() == 'H') {
                     g2d.drawRect(x + 30 - cellSize - 2, y - 2, 3 * cellSize + 4, 2 * cellSize + 4);
                 } else {
                     g2d.drawRect(x - 2, y - 2, navio.getSize() * cellSize + 4, cellSize + 4);
@@ -124,10 +97,5 @@ public class ComponenteNavio extends JPanel {
             }
             y += cellSize + padding;
         }
-    }
-
-    @Override
-    public Dimension getPreferredSize() {
-        return new Dimension(200, 600);
     }
 }
