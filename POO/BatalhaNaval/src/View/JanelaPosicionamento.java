@@ -31,45 +31,53 @@ class JanelaPosicionamento extends JFrame {
         setTitle("Batalha Naval - Posicionamento - Jogador " + jogador);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
-        PainelNavios painelNavios = new PainelNavios(navioSelecionado, contadores);
+        PainelNavios painelNavios = new PainelNavios(navioSelecionado);
 
         JLabel labelNomeJogador = new JLabel(Nomes[jogador-1]);
         labelNomeJogador.setHorizontalAlignment(JLabel.CENTER);
         add(labelNomeJogador, BorderLayout.NORTH);
 
+        PainelTabuleiro painelTabuleiro;
         if (jogador == 1) {
-            PainelTabuleiro painelTabuleiro = new PainelTabuleiro(tabuleiro1, navioSelecionado, contadores);
+            painelTabuleiro = new PainelTabuleiro(tabuleiro1, navioSelecionado, contadores);
+            painelTabuleiro.addObservador(painelNavios); // Registrar o observador
             add(painelNavios);
             add(painelTabuleiro, BorderLayout.EAST);
         }
         else {
-            PainelTabuleiro painelTabuleiro = new PainelTabuleiro(tabuleiro2, navioSelecionado, contadores);
+            painelTabuleiro = new PainelTabuleiro(tabuleiro2, navioSelecionado, contadores);
+            painelTabuleiro.addObservador(painelNavios); // Registrar o observador
             add(painelNavios);
             add(painelTabuleiro, BorderLayout.EAST);
         }
 
         if (jogador == 1) {
             btnTrocarJogador = new JButton("Trocar para o jogador 2");
-            btnTrocarJogador.addActionListener(e -> abrirSegundaJanela());
+            btnTrocarJogador.addActionListener(e -> abrirSegundaJanela(painelNavios));
         }
         else {
             btnTrocarJogador = new JButton("Começar o jogo!");
-            btnTrocarJogador.addActionListener(e -> abrirJanelaAtaque());
+            btnTrocarJogador.addActionListener(e -> abrirJanelaAtaque(painelNavios));
         }
         add(btnTrocarJogador, BorderLayout.SOUTH);
+        
         setVisible(true);
     }
 
-    private void abrirSegundaJanela() {
-        if(contadores[0] < 1 || contadores[1] < 1 || contadores[2] < 0 || contadores[3] < 0 || contadores[4] < 0) {
+    private void abrirSegundaJanela(PainelNavios painelNavios) {
+        if(!painelNavios.todosNaviosPosicionados()) {
             return;
         }
+        painelNavios.resetContador();
         new JanelaPosicionamento(tabuleiro1, tabuleiro2, tabuleiroOculto1, tabuleiroOculto2, navioSelecionado, 2, nomes);
         this.dispose();
     }
 
-    private void abrirJanelaAtaque() {
-        new JanelaBatalha(tabuleiro1, tabuleiro2, tabuleiroOculto1, tabuleiroOculto2);
+    private void abrirJanelaAtaque(PainelNavios painelNavios) {
+        if(!painelNavios.todosNaviosPosicionados()) {
+            return;
+        }
+        new JanelaBatalha(tabuleiro1, tabuleiro2, tabuleiroOculto1, tabuleiroOculto2, nomes);
         this.dispose();
     }
 }

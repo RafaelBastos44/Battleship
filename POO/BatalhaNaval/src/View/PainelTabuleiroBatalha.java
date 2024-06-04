@@ -5,63 +5,61 @@ import java.awt.*;
 import java.awt.event.*;
 import java.awt.geom.Rectangle2D;
 
-import javax.swing.JPanel;
-
 import Model.Tabuleiro;
 
-class PainelTabuleiroBatalha extends JPanel{
+class PainelTabuleiroBatalha extends JPanel {
     private int tamanhoCelula = 30;
     private int numCelulas = 15;
     private int ataques = 3;
     private Tabuleiro tabuleiroOculto;
     private Tabuleiro tabuleiro;
+    private JLabel ataqueLabel;
 
-    public PainelTabuleiroBatalha(Tabuleiro tabuleiro, Tabuleiro tabuleiroOculto, int jogador, boolean[] vezJogador1){
+    public PainelTabuleiroBatalha(Tabuleiro tabuleiro, Tabuleiro tabuleiroOculto, int jogador, boolean[] vezJogador1, JLabel ataqueLabel, JLabel jogadorLabel, String[] Nomes) {
         this.tabuleiroOculto = tabuleiroOculto;
         this.tabuleiro = tabuleiro;
+        this.ataqueLabel = ataqueLabel;
         setPreferredSize(new Dimension(numCelulas * tamanhoCelula, numCelulas * tamanhoCelula));
 
         addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                if(jogador == 1 && vezJogador1[0] || jogador == 2 && !vezJogador1[0]){
+                if (jogador == 1 && vezJogador1[0] || jogador == 2 && !vezJogador1[0]) {
                     int linha = e.getY() / tamanhoCelula;
                     int coluna = e.getX() / tamanhoCelula;
                     String ataque = tabuleiro.atacar(linha, coluna, tabuleiroOculto);
 
-                    if(ataque != "") {
+                    if (!ataque.isEmpty()) {
                         ataques--;
                         repaint();
-                        JOptionPane.showMessageDialog(null, ataque);
+                        ataqueLabel.setText(ataque);
                         verificaFim();
                     } else {
-                        JOptionPane.showMessageDialog(null, "Ataque inválido!");
+                        ataqueLabel.setText("Ataque inválido!");
                     }
 
                     System.out.println("Linha: " + linha + " Coluna: " + coluna + " Jogador: " + jogador + " Ataques restantes: " + ataques);
-                    if (ataques == 0){
-                        if(jogador == 1){
+                    if (ataques == 0) {
+                        if (jogador == 1) {
                             vezJogador1[0] = false;
-                            System.out.println("Vez do jogador 2");
-                        }
-                        else{
+                            jogadorLabel.setText("Vez de " + Nomes[1]);
+                        } else {
                             vezJogador1[0] = true;
-                            System.out.println("Vez do jogador 1");
+                            jogadorLabel.setText("Vez de " + Nomes[0]);
                         }
                         ataques = 3;
                     }
-                }
-                else{
-                    System.out.println("Nao é a vez do jogador " + jogador);
+                } else {
+                    ataqueLabel.setText("Não é a vez de " + Nomes[jogador-1]);
                 }
                 repaint();
             }
         });
     }
 
-    private void verificaFim(){
-        if(tabuleiro.todosNaviosAfundados(tabuleiroOculto)){
-            JOptionPane.showMessageDialog(null, "Fim de jogo!");
+    private void verificaFim() {
+        if (tabuleiro.todosNaviosAfundados(tabuleiroOculto)) {
+            ataqueLabel.setText("Fim de jogo!");
             System.exit(0);
         }
     }

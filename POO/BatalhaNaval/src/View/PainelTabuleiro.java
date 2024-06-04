@@ -4,18 +4,19 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.geom.Rectangle2D;
-
-//import Model.Tabuleiro;
+import java.util.ArrayList;
+import java.util.List;
 import Model.*;
+import Observer.*;
 
-
-class PainelTabuleiro extends JPanel {
+class PainelTabuleiro extends JPanel implements ObservadoIF {
     private Tabuleiro tabuleiroTemp;
     private int tamanhoCelula = 30;
     private int numCelulas = 15;
     private int orientacao = 0;
     private boolean posicionando = false;
-    
+    private List<ObservadorIF> observers = new ArrayList<>();
+
     public PainelTabuleiro(Tabuleiro tabuleiro, Navio navioSelecionado, int[] contadores) {
         this.tabuleiroTemp = new Tabuleiro(numCelulas);
 
@@ -24,17 +25,17 @@ class PainelTabuleiro extends JPanel {
         addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
+                requestFocusInWindow();
                 int linha = e.getY() / tamanhoCelula;
                 int coluna = e.getX() / tamanhoCelula;
                 System.out.println(linha + " " + coluna);
-                if(SwingUtilities.isLeftMouseButton(e) && navioSelecionado.getSymbol() != 'N') {
+                if (SwingUtilities.isLeftMouseButton(e) && navioSelecionado.getSymbol() != 'N') {
                     tabuleiroTemp.setTabuleiro(tabuleiro.getTabuleiro());
                     insereNavioTabuleiro(navioSelecionado, linha, coluna, orientacao);
                     posicionando = true;
-                }
-                else if(SwingUtilities.isRightMouseButton(e) && posicionando) {
+                } else if (SwingUtilities.isRightMouseButton(e) && posicionando) {
                     orientacao++;
-                    if(orientacao > 3) {
+                    if (orientacao > 3) {
                         orientacao = 0;
                     }
                     tabuleiroTemp.setTabuleiro(tabuleiro.getTabuleiro());
@@ -52,34 +53,47 @@ class PainelTabuleiro extends JPanel {
                 if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
                     tabuleiro.setTabuleiro(tabuleiroTemp.getTabuleiro());
                     tabuleiro.exibirTabuleiro();
-                    
-                    if (navioSelecionado.getSymbol() == 'G') {
-                        contadores[0]++;
+
+                    switch (navioSelecionado.getSymbol()) {
+                        case 'G':
+                            contadores[0]++;
+                            break;
+                        case 'C':
+                            contadores[1]++;
+                            break;
+                        case 'D':
+                            contadores[2]++;
+                            break;
+                        case 'S':
+                            contadores[3]++;
+                            break;
+                        case 'H':
+                            contadores[4]++;
+                            break;
                     }
-                    else if (navioSelecionado.getSymbol() == 'C') {
-                        contadores[1]++;
-                    }
-                    else if (navioSelecionado.getSymbol() == 'D') {
-                        contadores[2]++;
-                    }
-                    else if (navioSelecionado.getSymbol() == 'S') {
-                        contadores[3]++;
-                    }
-                    else if (navioSelecionado.getSymbol() == 'H') {
-                        contadores[4]++;
-                    }
+                    navioSelecionado.setContadores(contadores);
                     navioSelecionado.setSymbol('N');
+                    notifyObservers(); // Notificar os observadores
                     posicionando = false;
-                }
-                else if (e.getKeyCode() == KeyEvent.VK_SPACE)
-                {
+                } else if (e.getKeyCode() == KeyEvent.VK_SPACE) {
                     tabuleiro.exibirTabuleiro();
                 }
                 repaint();
             }
         });
     }
-    
+
+    @Override
+    public void addObservador(ObservadorIF o) {
+        observers.add(o);
+    }
+
+    private void notifyObservers() {
+        for (ObservadorIF observer : observers) {
+            observer.notify(this);
+        }
+    }
+
     private Color getColor(char symbol) {
         switch (symbol) {
             case 'G': return new Color(0, 150, 0);
@@ -96,7 +110,6 @@ class PainelTabuleiro extends JPanel {
         super.paintComponent(g);
         Graphics2D g2d = (Graphics2D) g;
 
-        // Desenhar o tabuleiro atual
         for (int i = 0; i < numCelulas; i++) {
             for (int j = 0; j < numCelulas; j++) {
                 char celula = tabuleiroTemp.getCelula(i, j);
