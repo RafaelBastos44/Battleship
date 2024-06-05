@@ -1,5 +1,9 @@
 package View;
 import Model.Tabuleiro;
+
+import java.awt.Frame;
+
+import Model.ModelAPI;
 import Model.Navio;
 
 public class ViewAPI {
@@ -7,7 +11,7 @@ public class ViewAPI {
     private static ViewAPI instance;
     private Navio navioSelecionado;
 
-    private ViewAPI() {
+    ViewAPI() {
         navioSelecionado = new Navio('N');
     }
 

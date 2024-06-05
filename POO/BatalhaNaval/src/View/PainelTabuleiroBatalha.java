@@ -4,21 +4,24 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.geom.Rectangle2D;
-
+import java.util.ArrayList;
+import java.util.List;
 import Model.Tabuleiro;
+import Observer.*;
 
-class PainelTabuleiroBatalha extends JPanel {
+class PainelTabuleiroBatalha extends JPanel implements ObservadoIF {
     private int tamanhoCelula = 30;
     private int numCelulas = 15;
     private int ataques = 3;
     private Tabuleiro tabuleiroOculto;
     private Tabuleiro tabuleiro;
-    private JLabel ataqueLabel;
-
-    public PainelTabuleiroBatalha(Tabuleiro tabuleiro, Tabuleiro tabuleiroOculto, int jogador, boolean[] vezJogador1, JLabel ataqueLabel, JLabel jogadorLabel, String[] Nomes) {
+    private JLabel respostaLabel;
+    private List<ObservadorIF> observers = new ArrayList<>();
+    
+    public PainelTabuleiroBatalha(Tabuleiro tabuleiro, Tabuleiro tabuleiroOculto, int jogador, boolean[] vezJogador1, JLabel respostaLabel, JLabel jogadorLabel, JLabel ataquesLabel, String[] Nomes) {
         this.tabuleiroOculto = tabuleiroOculto;
         this.tabuleiro = tabuleiro;
-        this.ataqueLabel = ataqueLabel;
+        this.respostaLabel = respostaLabel;
         setPreferredSize(new Dimension(numCelulas * tamanhoCelula, numCelulas * tamanhoCelula));
 
         addMouseListener(new MouseAdapter() {
@@ -32,10 +35,10 @@ class PainelTabuleiroBatalha extends JPanel {
                     if (!ataque.isEmpty()) {
                         ataques--;
                         repaint();
-                        ataqueLabel.setText(ataque);
+                        respostaLabel.setText(ataque);
                         verificaFim();
                     } else {
-                        ataqueLabel.setText("Ataque inválido!");
+                        respostaLabel.setText("Ataque inválido!");
                     }
 
                     System.out.println("Linha: " + linha + " Coluna: " + coluna + " Jogador: " + jogador + " Ataques restantes: " + ataques);
@@ -49,8 +52,9 @@ class PainelTabuleiroBatalha extends JPanel {
                         }
                         ataques = 3;
                     }
+                    ataquesLabel.setText("Ataques Restantes: "+ataques);
                 } else {
-                    ataqueLabel.setText("Não é a vez de " + Nomes[jogador-1]);
+                    respostaLabel.setText("Não é a vez de " + Nomes[jogador-1]);
                 }
                 repaint();
             }
@@ -59,8 +63,20 @@ class PainelTabuleiroBatalha extends JPanel {
 
     private void verificaFim() {
         if (tabuleiro.todosNaviosAfundados(tabuleiroOculto)) {
-            ataqueLabel.setText("Fim de jogo!");
-            System.exit(0);
+            respostaLabel.setText("Fim de jogo!");
+            notifyObservers();
+            //System.exit(0);
+        }
+    }
+
+    @Override
+    public void addObservador(ObservadorIF o) {
+        observers.add(o);
+    }
+
+    private void notifyObservers() {
+        for (ObservadorIF observer : observers) {
+            observer.notify(this);
         }
     }
 

@@ -201,4 +201,13 @@ public class Tabuleiro {
             this.tabuleiro[i] = tabuleiro[i].clone();
         }
     }
+
+    public void limpar() {
+        for (int linha = 0; linha < 15; linha++) {
+            for (int coluna = 0; coluna < 15; coluna++) {
+                // Redefinir o estado da célula para o valor inicial
+                tabuleiro[linha][coluna] = '~'; // Substitua 'AGUA' pelo valor que você usa
+            }
+        }
+    }
 }
