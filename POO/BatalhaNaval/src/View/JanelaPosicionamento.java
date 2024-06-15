@@ -78,7 +78,7 @@ class JanelaPosicionamento extends JFrame {
             return;
         }
         painelNavios.resetContador();
-        new JanelaBatalha(tabuleiro1, tabuleiro2, tabuleiroOculto1, tabuleiroOculto2, nomes);
+        new JanelaBatalha(tabuleiro1, tabuleiro2, tabuleiroOculto1, tabuleiroOculto2, nomes, true, 3);
         this.dispose();
     }
 }

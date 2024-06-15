@@ -1,9 +1,5 @@
 package View;
 import Model.Tabuleiro;
-
-import java.awt.Frame;
-
-import Model.ModelAPI;
 import Model.Navio;
 
 public class ViewAPI {
@@ -11,7 +7,7 @@ public class ViewAPI {
     private static ViewAPI instance;
     private Navio navioSelecionado;
 
-    ViewAPI() {
+    private ViewAPI() {
         navioSelecionado = new Navio('N');
     }
 
@@ -32,7 +28,7 @@ public class ViewAPI {
     }
 
     public void inicializaJogo(Tabuleiro tabuleiro1, Tabuleiro tabuleiro2, Tabuleiro tabuleiroOculto1, Tabuleiro tabuleiroOculto2, String[] Nomes) {
-        new JanelaPosicionamento(tabuleiro1, tabuleiro2, tabuleiroOculto1, tabuleiroOculto2, navioSelecionado,1, Nomes);
+        new JanelaMenu(tabuleiro1, tabuleiro2, tabuleiroOculto1, tabuleiroOculto2, navioSelecionado, Nomes).setVisible(true);
         navioSelecionado.setSymbol('N');
     }
     

@@ -7,8 +7,10 @@ import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
 import java.util.List;
 import Model.Tabuleiro;
+import Model.Salvamento;
 import Observer.*;
 
+@SuppressWarnings("unused")
 class PainelTabuleiroBatalha extends JPanel implements ObservadoIF {
     private int tamanhoCelula = 30;
     private int numCelulas = 15;
@@ -18,9 +20,19 @@ class PainelTabuleiroBatalha extends JPanel implements ObservadoIF {
     private JLabel respostaLabel;
     private List<ObservadorIF> observers = new ArrayList<>();
     
-    public PainelTabuleiroBatalha(Tabuleiro tabuleiro, Tabuleiro tabuleiroOculto, int jogador, boolean[] vezJogador1, JLabel respostaLabel, JLabel jogadorLabel, JLabel ataquesLabel, String[] Nomes) {
-        this.tabuleiroOculto = tabuleiroOculto;
-        this.tabuleiro = tabuleiro;
+    public PainelTabuleiroBatalha(Tabuleiro tabuleiro1, Tabuleiro tabuleiro2, Tabuleiro tabuleiroOculto1, Tabuleiro tabuleiroOculto2, int jogador, boolean[] vezJogador1, JLabel respostaLabel, JLabel jogadorLabel, JLabel ataquesLabel, String[] Nomes, int ataque) {
+        if(jogador == 2)
+        {
+            this.tabuleiroOculto = tabuleiroOculto1;
+            this.tabuleiro = tabuleiro1;
+        }
+        else{
+        this.tabuleiroOculto = tabuleiroOculto2;
+        this.tabuleiro = tabuleiro2
+        ;}
+
+        ataques = ataque;
+            
         this.respostaLabel = respostaLabel;
         setPreferredSize(new Dimension(numCelulas * tamanhoCelula, numCelulas * tamanhoCelula));
 
@@ -34,6 +46,7 @@ class PainelTabuleiroBatalha extends JPanel implements ObservadoIF {
 
                     if (!ataque.isEmpty()) {
                         ataques--;
+                        Model.Salvamento.gravarEstadoJogo(tabuleiro1, tabuleiro2, tabuleiroOculto1, tabuleiroOculto2, vezJogador1[0], ataques, Nomes);
                         repaint();
                         respostaLabel.setText(ataque);
                         verificaFim();

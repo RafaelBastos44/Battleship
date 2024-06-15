@@ -19,13 +19,25 @@ class JanelaBatalha extends JFrame implements ObservadorIF {
     private Tabuleiro tabuleiro2;
     private Tabuleiro tabuleiroOculto1;
     private Tabuleiro tabuleiroOculto2;
+    int jogador = 1;
     
 
-    public JanelaBatalha(Tabuleiro tabuleiro1, Tabuleiro tabuleiro2, Tabuleiro tabuleiroOculto1, Tabuleiro tabuleiroOculto2, String[] Nomes) {
+    public JanelaBatalha(Tabuleiro tabuleiro1, Tabuleiro tabuleiro2, Tabuleiro tabuleiroOculto1, Tabuleiro tabuleiroOculto2, String[] Nomes, boolean turno, int ataque) {
         this.tabuleiro1 = tabuleiro1;
         this.tabuleiro2 = tabuleiro2;
         this.tabuleiroOculto1 = tabuleiroOculto1;
         this.tabuleiroOculto2 = tabuleiroOculto2;
+        vezJogador1[0] = turno;
+   
+        if(vezJogador1[0] == true){
+            jogador = 1;
+        }
+        else{
+            jogador = 2;
+        }
+
+        System.out.println(ataque);
+
         setTitle("Batalha Naval - Batalha");
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLayout(new BorderLayout());
@@ -34,17 +46,19 @@ class JanelaBatalha extends JFrame implements ObservadorIF {
 
         JLabel respostaLabel = new JLabel("");
         respostaLabel.setHorizontalAlignment(JLabel.CENTER);
-        JLabel ataquesLabel = new JLabel("Ataques Restantes: 3");
+        JLabel ataquesLabel = new JLabel("Ataques Restantes: " + ataque);
         ataquesLabel.setHorizontalAlignment(JLabel.CENTER);
-        JLabel jogadorLabel = new JLabel("Vez de " + Nomes[0]);
+        JLabel jogadorLabel = new JLabel("Vez de " + Nomes[jogador-1]);
         jogadorLabel.setHorizontalAlignment(JLabel.CENTER);
 
         JPanel panelLabels = new JPanel(new GridLayout(2, 1));
         panelLabels.add(jogadorLabel);
         panelLabels.add(ataquesLabel);
 
-        PainelTabuleiroBatalha painelBatalha1 = new PainelTabuleiroBatalha(tabuleiro1, tabuleiroOculto1, 2, vezJogador1, respostaLabel, jogadorLabel, ataquesLabel, Nomes);
-        PainelTabuleiroBatalha painelBatalha2 = new PainelTabuleiroBatalha(tabuleiro2, tabuleiroOculto2, 1, vezJogador1, respostaLabel, jogadorLabel, ataquesLabel, Nomes);
+
+        PainelTabuleiroBatalha painelBatalha1 = new PainelTabuleiroBatalha(tabuleiro1, tabuleiro2, tabuleiroOculto1, tabuleiroOculto2, 2, vezJogador1, respostaLabel, jogadorLabel, ataquesLabel, Nomes, ataque);
+        PainelTabuleiroBatalha painelBatalha2 = new PainelTabuleiroBatalha(tabuleiro1, tabuleiro2, tabuleiroOculto1, tabuleiroOculto2, 1, vezJogador1, respostaLabel, jogadorLabel, ataquesLabel, Nomes, ataque);
+        
         painelBatalha1.addObservador(this);
         painelBatalha2.addObservador(this);
 
