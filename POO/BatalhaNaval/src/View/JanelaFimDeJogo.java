@@ -27,12 +27,16 @@ public class JanelaFimDeJogo extends JFrame {
         botaoJogarNovamente = new JButton("Jogar Novamente");
         botaoJogarNovamente.addActionListener(e -> {
             this.dispose();
+            Model.Salvamento.deletaEstadoJogo();
             ControllerAPI.getInstance().inicializa(); 
         });
         painelBotoes.add(botaoJogarNovamente);
 
         botaoEncerrar = new JButton("Encerrar");
-        botaoEncerrar.addActionListener(e -> System.exit(0));
+        botaoEncerrar.addActionListener(e -> {
+            Model.Salvamento.deletaEstadoJogo();
+            System.exit(0);
+        });
         painelBotoes.add(botaoEncerrar);
 
         add(painelBotoes, BorderLayout.SOUTH);

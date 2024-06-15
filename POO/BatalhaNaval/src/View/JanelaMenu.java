@@ -67,7 +67,7 @@ public class JanelaMenu extends JFrame {
     private void carregarJogo() {
         // Lógica para carregar um jogo salvo
         try {
-            Object[] estado = Salvamento.lerEstadoJogo(tabuleiro1, tabuleiro2, tabuleiroOculto1, tabuleiroOculto2, nomes);
+            Object[] estado = Model.Salvamento.lerEstadoJogo(tabuleiro1, tabuleiro2, tabuleiroOculto1, tabuleiroOculto2, nomes);
             boolean turno = (boolean) estado[0];
             int numeroDoAtaque = (int) estado[1];
 

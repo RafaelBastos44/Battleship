@@ -7,10 +7,8 @@ import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
 import java.util.List;
 import Model.Tabuleiro;
-import Model.Salvamento;
 import Observer.*;
 
-@SuppressWarnings("unused")
 class PainelTabuleiroBatalha extends JPanel implements ObservadoIF {
     private int tamanhoCelula = 30;
     private int numCelulas = 15;
