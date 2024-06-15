@@ -28,7 +28,7 @@ public class ViewAPI {
     }
 
     public void inicializaJogo(Tabuleiro tabuleiro1, Tabuleiro tabuleiro2, Tabuleiro tabuleiroOculto1, Tabuleiro tabuleiroOculto2, String[] Nomes) {
-        new JanelaMenu(tabuleiro1, tabuleiro2, tabuleiroOculto1, tabuleiroOculto2, navioSelecionado, Nomes).setVisible(true);
+        new JanelaMenu(tabuleiro1, tabuleiro2, tabuleiroOculto1, tabuleiroOculto2, navioSelecionado, Nomes);
         navioSelecionado.setSymbol('N');
     }
     

@@ -61,6 +61,7 @@ class JanelaPosicionamento extends JFrame {
         }
         add(btnTrocarJogador, BorderLayout.SOUTH);
         
+        setLocationRelativeTo(null);
         setVisible(true);
     }
 

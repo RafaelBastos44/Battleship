@@ -19,7 +19,8 @@ class JanelaBatalha extends JFrame implements ObservadorIF {
     private Tabuleiro tabuleiro2;
     private Tabuleiro tabuleiroOculto1;
     private Tabuleiro tabuleiroOculto2;
-    int jogador = 1;
+    private String[] nomes;
+    private int jogador = 1;
     
 
     public JanelaBatalha(Tabuleiro tabuleiro1, Tabuleiro tabuleiro2, Tabuleiro tabuleiroOculto1, Tabuleiro tabuleiroOculto2, String[] Nomes, boolean turno, int ataque) {
@@ -27,14 +28,10 @@ class JanelaBatalha extends JFrame implements ObservadorIF {
         this.tabuleiro2 = tabuleiro2;
         this.tabuleiroOculto1 = tabuleiroOculto1;
         this.tabuleiroOculto2 = tabuleiroOculto2;
+        this.nomes = Nomes;
         vezJogador1[0] = turno;
    
-        if(vezJogador1[0] == true){
-            jogador = 1;
-        }
-        else{
-            jogador = 2;
-        }
+        jogador = verificaJogador(vezJogador1);
 
         System.out.println(ataque);
 
@@ -78,17 +75,27 @@ class JanelaBatalha extends JFrame implements ObservadorIF {
         add(respostaLabel, BorderLayout.SOUTH);
         add(panelLabels, BorderLayout.NORTH);
 
+        setLocationRelativeTo(null);
         setVisible(true);
     }
 
     @Override
     public void notify(ObservadoIF o) {
-        new JanelaFimDeJogo("Luis");
+        new JanelaFimDeJogo(nomes[verificaJogador(vezJogador1)-1]);
         tabuleiro1.limpar();
         tabuleiro2.limpar();
         tabuleiroOculto1.limpar();
         tabuleiroOculto2.limpar();
         this.dispose();
+    }
+
+    public int verificaJogador(boolean[] vezJogador1){
+        if(vezJogador1[0] == true){
+            return 1;
+        }
+        else{
+            return 2;
+        }
     }
 
 }

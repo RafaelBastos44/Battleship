@@ -2,7 +2,7 @@ package View;
 
 import javax.swing.*;
 
-import Controller.ControllerAPI;
+//import Controller.ControllerAPI;
 
 import java.awt.*;
 
@@ -28,7 +28,7 @@ public class JanelaFimDeJogo extends JFrame {
         botaoJogarNovamente.addActionListener(e -> {
             this.dispose();
             Model.Salvamento.deletaEstadoJogo();
-            ControllerAPI.getInstance().inicializa(); 
+            Controller.ControllerAPI.getInstance().inicializa(); 
         });
         painelBotoes.add(botaoJogarNovamente);
 
@@ -41,6 +41,7 @@ public class JanelaFimDeJogo extends JFrame {
 
         add(painelBotoes, BorderLayout.SOUTH);
 
+        setLocationRelativeTo(null);
         setVisible(true);
     }
 }

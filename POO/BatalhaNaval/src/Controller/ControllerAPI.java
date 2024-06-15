@@ -21,9 +21,6 @@ public class ControllerAPI {
 		return instance;
 	}
 
-    public void reiniciarJogo() {
-    }
-
     public void inicializa() {
         model = ModelAPI.getInstance();
         view = ViewAPI.getInstance();

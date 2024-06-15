@@ -55,6 +55,9 @@ public class JanelaMenu extends JFrame {
         panel.add(carregarJogoButton);
 
         add(panel);
+
+        setLocationRelativeTo(null);
+        setVisible(true);
     }
 
     private void novoJogo() {
