@@ -33,9 +33,12 @@ public class Salvamento {
             int numeroDoAtaque = Integer.parseInt(linhaAtaque.split(": ")[1]);
 
             return new Object[]{turno, numeroDoAtaque}; // Retornando o turno e o número do ataque como um array
-        } catch (IOException e) {
+        } catch (FileNotFoundException e) {
             System.out.println("Exceção ao ler o estado do jogo: " + e.getMessage());
-            throw new RuntimeException(e); // Relança a exceção após registrar o erro
+            throw new FileNotFoundException("Arquivo de salvamento não encontrado.");
+        } catch (NoSuchElementException e) {
+            System.out.println("Erro ao ler o estado do jogo: " + e.getMessage());
+            throw new NoSuchElementException("Erro ao ler o estado do jogo: " + e.getMessage());
         }
     }
 
