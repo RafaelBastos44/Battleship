@@ -21,10 +21,10 @@ public class ControllerAPI {
 		return instance;
 	}
 
+
     public void inicializa() {
         model = ModelAPI.getInstance();
         view = ViewAPI.getInstance();
-        String Nomes[] = view.inicializaNomes();
-        view.inicializaJogo(model.getTabuleiro1(), model.getTabuleiro2(), model.getTabuleiroOculto1(), model.getTabuleiroOculto2(), Nomes);
+        view.inicializaJogo(model.getTabuleiro1(), model.getTabuleiro2(), model.getTabuleiroOculto1(), model.getTabuleiroOculto2());
     }
 }
