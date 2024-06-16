@@ -40,12 +40,12 @@ public class Tabuleiro {
         }
 
         // Ajusta a orientação para garantir apenas 0 (horizontal) e 1 (vertical)
-        if (tipo != 'H' && orientacao > 1) {
-            orientacao %= 2;
-        }
+        // if (tipo != 'H' && orientacao > 1) {
+        //     orientacao %= 2;
+        // }
 
         switch (orientacao) {
-            case 0: // Horizontal
+            case 0:
                 if (coluna + tamanhoNavio > tamanho) {
                     return false;
                 }
@@ -58,7 +58,7 @@ public class Tabuleiro {
                     tabuleiro[linha][coluna + i] = tipo;
                 }
                 break;
-            case 1: // Vertical
+            case 1:
                 if (linha + tamanhoNavio > tamanho) {
                     return false;
                 }
@@ -69,6 +69,32 @@ public class Tabuleiro {
                 }
                 for (int i = 0; i < tamanhoNavio; i++) {
                     tabuleiro[linha + i][coluna] = tipo;
+                }
+                break;
+            case 2:
+                if (coluna - tamanhoNavio < -1) {
+                    return false;
+                }
+                for (int i = 0; i < tamanhoNavio; i++) {
+                    if (tabuleiro[linha][coluna - i] != '~') {
+                        return false;
+                    }
+                }
+                for (int i = 0; i < tamanhoNavio; i++) {
+                    tabuleiro[linha][coluna - i] = tipo;
+                }
+                break;
+            case 3:
+                if (linha - tamanhoNavio < -1) {
+                    return false;
+                }
+                for (int i = 0; i < tamanhoNavio; i++) {
+                    if (tabuleiro[linha - i][coluna] != '~') {
+                        return false;
+                    }
+                }
+                for (int i = 0; i < tamanhoNavio; i++) {
+                    tabuleiro[linha - i][coluna] = tipo;
                 }
                 break;
             default:

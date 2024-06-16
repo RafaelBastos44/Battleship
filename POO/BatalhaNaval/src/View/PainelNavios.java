@@ -14,7 +14,7 @@ import Observer.*;
 class PainelNavios extends JPanel implements ObservadorIF {
     private Navio[] navios;
     private char[] tipos = {'G', 'C', 'D', 'S', 'H'};
-    private int[] limites = {0, 0, 0, 1, 0}; // Limites de navios (Couraçado, Cruzador, Destroyer, Submarino, Hidroavião)
+    private int[] limites = {1, 0, 0, 0, 1}; // Limites de navios (Couraçado, Cruzador, Destroyer, Submarino, Hidroavião)
     private Navio navioSelecionado;
 
     public PainelNavios(Navio navioSelecionado) {
