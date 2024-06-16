@@ -39,11 +39,6 @@ public class Tabuleiro {
                 return false;
         }
 
-        // Ajusta a orientação para garantir apenas 0 (horizontal) e 1 (vertical)
-        // if (tipo != 'H' && orientacao > 1) {
-        //     orientacao %= 2;
-        // }
-
         switch (orientacao) {
             case 0:
                 if (coluna + tamanhoNavio > tamanho) {
