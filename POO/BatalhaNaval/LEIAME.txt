@@ -3,5 +3,4 @@ Rafael Bastos - 2110857
 Luís Felipe Werneck - 2111044
 Thiago Henriques - 2211171
 
-Arquivo que contém a main:
-src/Main.java
+Arquivo que contém a main: src/Main.java
