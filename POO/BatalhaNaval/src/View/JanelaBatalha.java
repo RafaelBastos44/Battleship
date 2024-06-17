@@ -5,7 +5,10 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.Insets;
+import java.io.File;
 
+import javax.swing.JButton;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -21,6 +24,7 @@ class JanelaBatalha extends JFrame implements ObservadorIF {
     private Tabuleiro tabuleiroOculto2;
     private String[] nomes;
     private int jogador = 1;
+    private int[] ataques = {1};
     
 
     public JanelaBatalha(Tabuleiro tabuleiro1, Tabuleiro tabuleiro2, Tabuleiro tabuleiroOculto1, Tabuleiro tabuleiroOculto2, String[] Nomes, boolean turno, int ataque) {
@@ -30,6 +34,7 @@ class JanelaBatalha extends JFrame implements ObservadorIF {
         this.tabuleiroOculto2 = tabuleiroOculto2;
         this.nomes = Nomes;
         vezJogador1[0] = turno;
+        this.ataques[0] = ataque;
    
         jogador = verificaJogador(vezJogador1);
 
@@ -39,7 +44,7 @@ class JanelaBatalha extends JFrame implements ObservadorIF {
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLayout(new BorderLayout());
         JPanel panelBatalha = new JPanel(new GridBagLayout());
-        setSize(960, 550);
+        setSize(960, 610);
 
         JLabel respostaLabel = new JLabel("");
         respostaLabel.setHorizontalAlignment(JLabel.CENTER);
@@ -48,14 +53,20 @@ class JanelaBatalha extends JFrame implements ObservadorIF {
         JLabel jogadorLabel = new JLabel("Vez de " + Nomes[jogador-1]);
         jogadorLabel.setHorizontalAlignment(JLabel.CENTER);
 
-        JPanel panelLabels = new JPanel(new GridLayout(2, 1));
+        JButton btnSalvar = new JButton("Salvar");
+        JPanel panelLabels = new JPanel(new GridLayout(3, 1));
         panelLabels.add(jogadorLabel);
         panelLabels.add(ataquesLabel);
+        panelLabels.add(btnSalvar);
+
+        btnSalvar.addActionListener(e -> salvarJogo(ataques));
 
 
-        PainelTabuleiroBatalha painelBatalha1 = new PainelTabuleiroBatalha(tabuleiro1, tabuleiro2, tabuleiroOculto1, tabuleiroOculto2, 2, vezJogador1, respostaLabel, jogadorLabel, ataquesLabel, Nomes, ataque);
-        PainelTabuleiroBatalha painelBatalha2 = new PainelTabuleiroBatalha(tabuleiro1, tabuleiro2, tabuleiroOculto1, tabuleiroOculto2, 1, vezJogador1, respostaLabel, jogadorLabel, ataquesLabel, Nomes, ataque);
+        PainelTabuleiroBatalha painelBatalha1 = new PainelTabuleiroBatalha(tabuleiro1, tabuleiro2, tabuleiroOculto1, tabuleiroOculto2, 2, vezJogador1, respostaLabel, jogadorLabel, ataquesLabel, Nomes, ataques);
+        PainelTabuleiroBatalha painelBatalha2 = new PainelTabuleiroBatalha(tabuleiro1, tabuleiro2, tabuleiroOculto1, tabuleiroOculto2, 1, vezJogador1, respostaLabel, jogadorLabel, ataquesLabel, Nomes, ataques);
         
+        this.ataques[0] = ataque;
+
         painelBatalha1.addObservador(this);
         painelBatalha2.addObservador(this);
 
@@ -75,8 +86,19 @@ class JanelaBatalha extends JFrame implements ObservadorIF {
         add(respostaLabel, BorderLayout.SOUTH);
         add(panelLabels, BorderLayout.NORTH);
 
+
         setLocationRelativeTo(null);
         setVisible(true);
+    }
+
+    private void salvarJogo(int[] ataque){
+        if(ataque[0] != 3){
+            return;
+        }
+        JFileChooser fileChooser = new JFileChooser();
+        fileChooser.showSaveDialog(null);
+        File selectedFile = fileChooser.getSelectedFile();
+        Model.Salvamento.gravarEstadoJogo(tabuleiro1, tabuleiro2, tabuleiroOculto1, tabuleiroOculto2, vezJogador1[0], ataques[0], nomes, selectedFile);
     }
 
     @Override

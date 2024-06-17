@@ -9,8 +9,7 @@ import java.util.Scanner;
 
 public class Salvamento {
 
-    public static Object[] lerEstadoJogo(Tabuleiro tabuleiroJogador1, Tabuleiro tabuleiroJogador2, Tabuleiro tabuleiroOculto1, Tabuleiro tabuleiroOculto2, String[] nomes) throws FileNotFoundException, NoSuchElementException {
-        File file = new File("estado_jogo.txt");
+    public static Object[] lerEstadoJogo(Tabuleiro tabuleiroJogador1, Tabuleiro tabuleiroJogador2, Tabuleiro tabuleiroOculto1, Tabuleiro tabuleiroOculto2, String[] nomes, File file) throws FileNotFoundException, NoSuchElementException {
         try (Scanner fileScanner = new Scanner(file)) {
             fileScanner.nextLine(); // Pula "Jogador 1"
             lerTabuleiro(fileScanner, tabuleiroJogador1);
@@ -33,9 +32,12 @@ public class Salvamento {
             int numeroDoAtaque = Integer.parseInt(linhaAtaque.split(": ")[1]);
 
             return new Object[]{turno, numeroDoAtaque}; // Retornando o turno e o número do ataque como um array
-        } catch (IOException e) {
+        } catch (FileNotFoundException e) {
             System.out.println("Exceção ao ler o estado do jogo: " + e.getMessage());
-            throw new RuntimeException(e); // Relança a exceção após registrar o erro
+            throw new FileNotFoundException("Arquivo de salvamento não encontrado.");
+        } catch (NoSuchElementException e) {
+            System.out.println("Erro ao ler o estado do jogo: " + e.getMessage());
+            throw new NoSuchElementException("Erro ao ler o estado do jogo: " + e.getMessage());
         }
     }
 
@@ -49,12 +51,8 @@ public class Salvamento {
         }
     }
 
-    public static void gravarEstadoJogo(Tabuleiro tabuleiroJogador1, Tabuleiro tabuleiroJogador2, Tabuleiro tabuleiroOculto1, Tabuleiro tabuleiroOculto2, boolean turno, int numeroDoAtaque, String[] nomes) {
-        if(numeroDoAtaque == 0){
-            numeroDoAtaque = 3;
-            turno = !turno;
-        }
-        try (FileWriter writer = new FileWriter("estado_jogo.txt")) {
+    public static void gravarEstadoJogo(Tabuleiro tabuleiroJogador1, Tabuleiro tabuleiroJogador2, Tabuleiro tabuleiroOculto1, Tabuleiro tabuleiroOculto2, boolean turno, int numeroDoAtaque, String[] nomes, File file) {
+        try (FileWriter writer = new FileWriter(file)) {
             writer.write("Jogador 1\n");
             writer.write(tabuleiroParaString(tabuleiroJogador1));
             writer.write("Oculto 1\n");

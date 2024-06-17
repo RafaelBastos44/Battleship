@@ -3,7 +3,7 @@ package View;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
-import java.io.FileNotFoundException;
+import java.io.*;
 import java.util.NoSuchElementException;
 import Model.*;
 
@@ -26,6 +26,7 @@ public class JanelaMenu extends JFrame {
         setSize(400, 400);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);  // Centraliza a janela na tela
+        
 
         JPanel panel = new JPanel(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
@@ -85,17 +86,22 @@ public class JanelaMenu extends JFrame {
 
     private void carregarJogo() {
         try {
+            JFileChooser fileChooser = new JFileChooser();
+            fileChooser.showOpenDialog(null);
+            File selectedFile = fileChooser.getSelectedFile();
             String[] nomes = {"Jogador 1", "Jogador 2"};
-            Object[] estado = Model.Salvamento.lerEstadoJogo(tabuleiro1, tabuleiro2, tabuleiroOculto1, tabuleiroOculto2, nomes);
+            Object[] estado = Model.Salvamento.lerEstadoJogo(tabuleiro1, tabuleiro2, tabuleiroOculto1, tabuleiroOculto2, nomes, selectedFile);
             boolean turno = (boolean) estado[0];
             int numeroDoAtaque = (int) estado[1];
 
-            JOptionPane.showMessageDialog(this, "Jogo carregado! Turno: " + (turno ? "Jogador 1" : "Jogador 2") + ", Número do Ataque: " + numeroDoAtaque);
+            JOptionPane.showMessageDialog(this, "Jogo carregado! Turno: " + (turno ? nomes[0] : nomes[1]) + ", Número do Ataque: " + numeroDoAtaque);
             JanelaBatalha janelaBatalha = new JanelaBatalha(tabuleiro1, tabuleiro2, tabuleiroOculto1, tabuleiroOculto2, nomes, turno, numeroDoAtaque);
             janelaBatalha.setVisible(true);
             this.dispose(); // Fechar a janela atual
-        } catch (FileNotFoundException | NoSuchElementException e) {
-            JOptionPane.showMessageDialog(this, "Erro ao carregar o jogo: " + e.getMessage());
+        } catch (FileNotFoundException e) {
+            JOptionPane.showMessageDialog(this, "Não foi possível encontrar nenhum salvamento.", "Erro", JOptionPane.ERROR_MESSAGE);
+        } catch (NoSuchElementException e) {
+            JOptionPane.showMessageDialog(this, "Erro ao carregar o jogo: " + e.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
         }
     }
 }

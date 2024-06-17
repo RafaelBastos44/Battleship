@@ -12,13 +12,13 @@ import Observer.*;
 class PainelTabuleiroBatalha extends JPanel implements ObservadoIF {
     private int tamanhoCelula = 30;
     private int numCelulas = 15;
-    private int ataques = 3;
+    //private int ataques[0] = 3;
     private Tabuleiro tabuleiroOculto;
     private Tabuleiro tabuleiro;
     private JLabel respostaLabel;
     private List<ObservadorIF> observers = new ArrayList<>();
     
-    public PainelTabuleiroBatalha(Tabuleiro tabuleiro1, Tabuleiro tabuleiro2, Tabuleiro tabuleiroOculto1, Tabuleiro tabuleiroOculto2, int jogador, boolean[] vezJogador1, JLabel respostaLabel, JLabel jogadorLabel, JLabel ataquesLabel, String[] Nomes, int ataque) {
+    public PainelTabuleiroBatalha(Tabuleiro tabuleiro1, Tabuleiro tabuleiro2, Tabuleiro tabuleiroOculto1, Tabuleiro tabuleiroOculto2, int jogador, boolean[] vezJogador1, JLabel respostaLabel, JLabel jogadorLabel, JLabel ataquesLabel, String[] Nomes, int[] ataques) {
         if(jogador == 2)
         {
             this.tabuleiroOculto = tabuleiroOculto1;
@@ -28,8 +28,7 @@ class PainelTabuleiroBatalha extends JPanel implements ObservadoIF {
         this.tabuleiroOculto = tabuleiroOculto2;
         this.tabuleiro = tabuleiro2
         ;}
-
-        ataques = ataque;
+    
             
         this.respostaLabel = respostaLabel;
         setPreferredSize(new Dimension(numCelulas * tamanhoCelula, numCelulas * tamanhoCelula));
@@ -43,8 +42,7 @@ class PainelTabuleiroBatalha extends JPanel implements ObservadoIF {
                     String ataque = tabuleiro.atacar(linha, coluna, tabuleiroOculto);
 
                     if (!ataque.isEmpty()) {
-                        ataques--;
-                        Model.Salvamento.gravarEstadoJogo(tabuleiro1, tabuleiro2, tabuleiroOculto1, tabuleiroOculto2, vezJogador1[0], ataques, Nomes);
+                        ataques[0]--;
                         repaint();
                         respostaLabel.setText(ataque);
                         verificaFim();
@@ -52,8 +50,8 @@ class PainelTabuleiroBatalha extends JPanel implements ObservadoIF {
                         respostaLabel.setText("Ataque inválido!");
                     }
 
-                    System.out.println("Linha: " + linha + " Coluna: " + coluna + " Jogador: " + jogador + " Ataques restantes: " + ataques);
-                    if (ataques == 0) {
+                    System.out.println("Linha: " + linha + " Coluna: " + coluna + " Jogador: " + jogador + " ataques[0] restantes: " + ataques[0]);
+                    if (ataques[0] == 0) {
                         if (jogador == 1) {
                             vezJogador1[0] = false;
                             jogadorLabel.setText("Vez de " + Nomes[1]);
@@ -61,9 +59,9 @@ class PainelTabuleiroBatalha extends JPanel implements ObservadoIF {
                             vezJogador1[0] = true;
                             jogadorLabel.setText("Vez de " + Nomes[0]);
                         }
-                        ataques = 3;
+                        ataques[0] = 3;
                     }
-                    ataquesLabel.setText("Ataques Restantes: "+ataques);
+                    ataquesLabel.setText("ataques Restantes: "+ataques[0]);
                 } else {
                     respostaLabel.setText("Não é a vez de " + Nomes[jogador-1]);
                 }
